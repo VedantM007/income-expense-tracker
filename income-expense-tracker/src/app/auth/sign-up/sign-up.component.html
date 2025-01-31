@@ -1,0 +1,179 @@
+<div class="flex justify-center items-center h-screen px-4 sm:px-0">
+    <div class="w-full max-w-md">
+      <!-- Logo Section -->
+      <div class="flex w-full logo p-4 shadow-lg bg-white rounded-tl-lg rounded-tr-lg">
+        <img
+          src="../../../assets/images/image.png"
+          alt="logo"
+          class="w-20 h-20 rounded-full border-2 border-[#00152e]"
+        />
+        <span
+          class="ml-4 mt-6 text-white font-bold text-lg sm:text-2xl"
+        >
+          Income and Expense Tracker
+        </span>
+      </div>
+  
+      <!-- Form Container -->
+      <div class="shadow-xl p-6 bg-white rounded-lg mt-4">
+        <div class="flex justify-center items-center text-gray-700 text-sm sm:text-base pb-2">
+          Sign Up to get started with Income-Expense Tracker
+        </div>
+        <form [formGroup]="myForm" (ngSubmit)="onSave()">
+          <!-- Email Input -->
+          <div class="my-4">
+            <input
+              id="fname"
+              type="text"
+              formControlName="fname"
+              placeholder="First Name"
+              [ngClass]="{
+                'border-red-500': myForm.get('fname')?.invalid && myForm.get('fname')?.touched
+              }"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <div *ngIf="myForm.get('fname')?.touched">
+              <small
+                *ngIf="myForm.get('fname')?.hasError('required')"
+                class="text-red-500"
+              >
+                First Name is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <input
+              id="lname"
+              type="text"
+              formControlName="lname"
+              placeholder="Last Name"
+              [ngClass]="{
+                'border-red-500': myForm.get('lname')?.invalid && myForm.get('lname')?.touched
+              }"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <div *ngIf="myForm.get('lname')?.touched">
+              <small
+                *ngIf="myForm.get('lname')?.hasError('required')"
+                class="text-red-500"
+              >
+                Last Name is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <input
+              id="email"
+              type="text"
+              formControlName="email"
+              placeholder="Email"
+              [ngClass]="{
+                'border-red-500': myForm.get('email')?.invalid && myForm.get('email')?.touched
+              }"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <div *ngIf="myForm.get('email')?.touched">
+              <small
+                *ngIf="myForm.get('email')?.hasError('required')"
+                class="text-red-500"
+              >
+                Email is required.
+              </small>
+              <small
+            *ngIf="myForm.get('email')?.hasError('email')"
+            class="text-red-500"
+          >
+            Please enter a valid email address.
+          </small>
+            </div>
+          </div>
+
+          <div class="my-4 relative">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Password"
+              [ngClass]="{
+                'border-red-500': myForm.get('password')?.invalid && myForm.get('password')?.touched
+              }"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute text-sm right-3 top-2.5 text-blue-500 hover:text-blue-900 focus:outline-none"
+            >
+              {{ showPassword ? 'Hide' : 'Show' }}
+            </button>
+
+             <!-- Error for required and minLength -->
+            <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
+              <small *ngIf="myForm.get('password')?.hasError('required')" class="text-red-500">Password is required.</small>
+              <small *ngIf="myForm.get('password')?.hasError('minlength')" class="text-red-500">Password must be at least 6 characters long.</small>
+            <!-- Error for password strength -->
+             <div>
+              <small *ngIf="myForm.get('password')?.hasError('passwordWeak') && myForm.get('password')?.touched" class="text-red-500">Password must contain at least one uppercase letter, one special character, and one number.</small>
+            </div>
+            </div>
+          </div>
+
+          <div class="my-4 relative">
+            <input
+              id="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Confirm Password"
+              [ngClass]="{
+                'border-red-500': myForm.get('confirmPassword')?.invalid && myForm.get('confirmPassword')?.touched
+              }"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="absolute text-sm right-3 top-2.5 text-blue-500 hover:text-blue-900 focus:outline-none"
+            >
+              {{ showConfirmPassword ? 'Hide' : 'Show' }}
+            </button>
+
+             <!-- Error for required and Password mismatch -->
+             <div *ngIf="myForm.get('confirmPassword')?.invalid && myForm.get('confirmPassword')?.touched">
+                <small class="text-red-500" *ngIf="myForm.get('confirmPassword')?.hasError('required')">
+                  Confirm Password is required.
+                </small>
+              </div>
+              <div *ngIf="myForm.hasError('passwordMismatch') && myForm.get('confirmPassword')?.touched">
+                <small class="text-red-500">Passwords do not match.</small>
+              </div>
+            </div>
+  
+          <!-- Actions -->
+            <button
+              type="submit"
+              [disabled]="myForm.invalid || isLoading"
+              class="w-full px-14 py-2 mt-14 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#639cff] disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 uppercase"
+            >
+              <span
+                *ngIf="isLoading"
+                class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
+              ></span>
+              Sign up
+            </button>
+        </form>
+      </div>
+  
+     <!-- Sign-In Link -->
+     <div class="pt-4 pb-2 flex justify-center items-center text-sm sm:text-base cursor-pointer">
+        Return to&nbsp;<a (click)="navigateToSignIn()" class="text-blue-500 hover:text-blue-700">Sign in</a>
+      </div>
+  
+      <!-- Footer -->
+      <div class="flex justify-center items-center text-gray-500 text-xs sm:text-sm">
+        {{ footerText }}
+      </div>
+    </div>
+  </div>
+  
