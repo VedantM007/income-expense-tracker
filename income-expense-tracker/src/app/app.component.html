@@ -1,1 +1,28 @@
-<router-outlet></router-outlet>
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <app-sidebar
+    *ngIf="show"
+    [ngClass]="{
+      '-translate-x-full': isSidebarOpen,
+      'translate-x-0': !isSidebarOpen
+    }"
+    class="bg-[#00142e] text-white w-64 fixed inset-y-0 left-0 transform transition-transform duration-300 ease-in-out md:block hidden"
+  ></app-sidebar>
+
+  <!-- Main Content -->
+  <div
+    [ngClass]="{
+      'ml-64': show && !isSidebarOpen,
+      'ml-0': !show || isSidebarOpen
+    }"
+    class="flex flex-col flex-grow transition-all duration-300"
+  >
+    <!-- Header -->
+    <app-header *ngIf="show"></app-header>
+
+    <!-- Router Outlet -->
+    <main class="flex-grow p-4 bg-gray-100">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

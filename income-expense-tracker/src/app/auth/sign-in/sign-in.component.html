@@ -1,22 +1,22 @@
-<div class="flex justify-center items-center h-screen px-4 sm:px-0">
+<div class="flex justify-center items-center h-screen px-4 sm:px-0 xs:px-2">
   <div class="w-full max-w-md">
     <!-- Logo Section -->
-    <div class="flex w-full logo p-4 shadow-lg bg-white rounded-tl-lg rounded-tr-lg">
+    <div class="flex w-full logo p-4 shadow-lg bg-white rounded-tl-lg rounded-tr-lg xs:flex-col xs:items-center xs:gap-4">
       <img
         src="../../../assets/images/image.png"
         alt="logo"
         class="w-20 h-20 rounded-full border-2 border-[#00152e]"
       />
       <span
-        class="ml-4 mt-6 text-white font-bold text-lg sm:text-2xl"
+        class="ml-4 mt-6 text-white font-bold text-lg sm:text-2xl xs:mt-0 xs:text-center"
       >
         Income and Expense Tracker
       </span>
     </div>
 
     <!-- Form Container -->
-    <div class="shadow-xl p-6 bg-white rounded-lg mt-4">
-      <div class="flex justify-center items-center text-gray-700 text-sm sm:text-base pb-2">
+    <div class="shadow-xl p-6 bg-white rounded-bl-lg rounded-br-lg xs:p-4">
+      <div class="flex justify-center items-center text-black text-sm sm:text-base pb-2 xs:text-sm">
         Sign in to start your session
       </div>
       <form [formGroup]="myForm" (ngSubmit)="onSave()">
@@ -30,18 +30,18 @@
             [ngClass]="{
               'border-red-500': myForm.get('email')?.invalid && myForm.get('email')?.touched
             }"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent xs:text-sm"
           />
           <div *ngIf="myForm.get('email')?.touched">
             <small
               *ngIf="myForm.get('email')?.hasError('required')"
-              class="text-red-500"
+              class="text-red-500 xs:text-sm"
             >
               Email is required.
             </small>
             <small
               *ngIf="myForm.get('email')?.hasError('email')"
-              class="text-red-500"
+              class="text-red-500 xs:text-sm"
             >
               Please enter a valid email address.
             </small>
@@ -58,29 +58,29 @@
             [ngClass]="{
               'border-red-500': myForm.get('password')?.invalid && myForm.get('password')?.touched
             }"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent xs:text-sm"
           />
           <button
             type="button"
             (click)="togglePasswordVisibility()"
-            class="absolute text-sm right-3 top-2.5 text-blue-500 hover:text-blue-900 focus:outline-none"
+            class="absolute text-sm right-3 top-2.5 text-blue-500 hover:text-blue-900 focus:outline-none xs:text-sm"
           >
             {{ showPassword ? 'Hide' : 'Show' }}
           </button>
           <div *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched">
-            <small class="text-red-500">Password is required.</small>
+            <small class="text-red-500 xs:text-sm">Password is required.</small>
           </div>
         </div>
 
         <!-- Actions -->
-        <div class="flex justify-between items-center mt-14">
-          <a (click)="navigateToForgetPassword()" class="mt-2 text-blue-500 hover:text-blue-700 text-sm sm:text-base cursor-pointer">
+        <div class="flex justify-between items-center mt-14 xs:mt-8">
+          <a (click)="navigateToForgetPassword()" class="text-blue-500 hover:text-blue-700 text-sm sm:text-base cursor-pointer xs:text-sm">
             Forget Password
           </a>
           <button
             type="submit"
             [disabled]="myForm.invalid || isLoading"
-            class="px-14 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#639cff] disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 uppercase"
+            class="px-14 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#639cff] disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 uppercase xs:px-10 xs:py-1 xs:text-sm"
           >
             <span
               *ngIf="isLoading"
@@ -93,12 +93,12 @@
     </div>
 
     <!-- Sign-Up Link -->
-    <div class="pt-4 pb-2 flex justify-center items-center text-sm sm:text-base cursor-pointer">
+    <div class="pt-4 pb-2 flex justify-center items-center text-sm sm:text-base cursor-pointer xs:text-sm">
       Don't have an account?&nbsp;<a (click)="navigateToSignUp()" class="text-blue-500 hover:text-blue-700">Sign Up</a>
     </div>
 
     <!-- Footer -->
-    <div class="flex justify-center items-center text-gray-500 text-xs sm:text-sm">
+    <div class="flex justify-center items-center text-gray-500 text-sm sm:text-sm">
       {{ footerText }}
     </div>
   </div>

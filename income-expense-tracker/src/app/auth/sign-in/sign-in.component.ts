@@ -42,6 +42,7 @@ export class SignInComponent {
 
   onSave(): void {
     if (this.myForm.valid) {
+      this.router.navigate(['/dashboard'])
     }
   }
 }

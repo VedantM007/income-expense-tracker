@@ -1,0 +1,26 @@
+<header class="flex items-center justify-between bg-white text-black px-4 py-2 shadow-xl">
+  <!-- Sidebar Toggle Button (visible on xs and larger screens) -->
+  <button
+    class="p-2 mr-4 text-black rounded-lg focus:outline-none"
+    aria-label="Toggle Sidebar"
+    (click)="toggleSidebar()"
+  >
+    <!-- Hamburger Icon for Sidebar Toggle -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+    </svg>
+  </button>
+
+  <!-- Profile Section -->
+  <div class="flex items-center space-x-4 p-4 xs:flex-col xs:items-center xs:space-x-0">
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+      alt="Profile"
+      class="w-12 h-12 rounded-full"
+    />
+    <div class="text-center xs:mt-2">
+      <div class="text-base font-light xs:text-sm">Michael</div>
+      <div class="text-base font-light xs:text-sm">Michael</div>
+    </div>
+  </div>
+</header>
