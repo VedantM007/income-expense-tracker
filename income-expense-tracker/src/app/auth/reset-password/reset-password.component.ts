@@ -21,7 +21,7 @@ export class ResetPasswordComponent implements OnInit {
    constructor(private fb : FormBuilder, private router : Router){}
 
    ngOnInit() {
-    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries`
+    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`
      this.buildForm();
    }
 

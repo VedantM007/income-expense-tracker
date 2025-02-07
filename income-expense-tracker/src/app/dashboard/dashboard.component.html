@@ -1,1 +1,86 @@
-<p>dashboard works!</p>
+<div class="bg-white p-4">
+  <div class="flex">
+    <div
+      class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 hover:cursor-pointer"
+    >
+      Balance: <span class="text-violet-600">&#8377;{{ balance }}</span>
+    </div>
+    <div
+      class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 hover:cursor-pointer"
+    >
+      Total Income: <span class="text-green-600">&#8377;{{ totalIncome }}</span>
+    </div>
+    <div
+      class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 hover:cursor-pointer"
+    >
+      Total Expense: <span class="text-red-600">&#8377;{{ totalExpense }}</span>
+    </div>
+  </div>
+
+  <div class="flex">
+    <div class="w-3/4 pt-8">
+      <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
+        Income Chart
+      </div>
+      <div class="border border-t-0 border-gray-200">
+        <div class="flex justify-center">
+          <div class="border border-green-800 bg-[#4fa56f] h-5 w-10 m-5"></div>
+          <div class="pt-[1.1rem]">Income</div>
+        </div>
+        <div id="income-chart" class="h-[500px]"></div>
+      </div>
+    </div>
+    <div class="w-1/4 pt-8 ml-3">
+      <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
+        Recent History
+      </div>
+      <div
+        class="border border-gray-200 text-center p-6 border-t-0 text-green-500 font-light hover:border-none hover:shadow-new transition-all duration-300 hover:cursor-pointer"
+      >
+        + 1000 Bonus
+      </div>
+      <div
+        class="border border-gray-200 text-center p-6 border-t-0 text-red-500 font-light
+        hover:border-none hover:shadow-new transition-all duration-300 hover:cursor-pointer"
+      >
+        - 80 Dinning out
+      </div>
+<div class="mt-10">
+  <div
+  class="border border-gray-200 border-t-0 text-center p-4 bg-gray-100"
+>
+  Income
+</div>
+<div
+  class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
+>
+  <div class="w-1/2 border-r-2 border-black">Minimum: 200</div>
+  <div class="w-1/2">Maximum: 3000</div>
+</div>
+<div
+  class="border border-gray-200 text-center border-t-0 p-4 bg-gray-100"
+>
+  Expense
+</div>
+<div
+  class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
+>
+  <div class="w-1/2 border-r-2 border-black">Minimum: 25</div>
+  <div class="w-1/2">Maximum: 100</div>
+</div>
+</div>
+    </div>
+  </div>
+  <div class="pt-8">
+    <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
+      Expense Chart
+    </div>
+    <div class="border border-t-0 border-gray-200">
+      <div class="flex justify-center">
+        <div class="border border-red-800 bg-red-600 h-5 w-10 m-5"></div>
+        <div class="pt-[1.1rem]">Expense</div>
+      </div>
+      <div id="expense-chart" class="h-[500px]"></div>
+    </div>
+  </div>
+</div>

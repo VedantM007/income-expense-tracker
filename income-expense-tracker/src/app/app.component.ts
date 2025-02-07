@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
         const currentRoute = event.urlAfterRedirects;
         
         // Define the routes where notes and footer should be hidden
-        const hideRoutes = ['/sign-in', '/sign-up', '/forget-password', '/reset-password']
+        const hideRoutes = ['/sign-in', '/sign-up', '/forget-password', '/reset-password', '/verify-otp']
 
         // Update visibility based on the current route
         this.show = !hideRoutes.some((route) =>

@@ -19,7 +19,7 @@ export class SignInComponent {
 
   ngOnInit() {
     this.buildForm();
-    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries`
+    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`
 
   }
 
@@ -42,7 +42,7 @@ export class SignInComponent {
 
   onSave(): void {
     if (this.myForm.valid) {
-      this.router.navigate(['/dashboard'])
+      this.router.navigate(['/verify-otp'])
     }
   }
 }

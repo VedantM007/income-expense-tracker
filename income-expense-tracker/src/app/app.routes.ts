@@ -4,6 +4,9 @@ import { ForgetPasswordComponent } from './auth/forget-password/forget-password.
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
+import { IncomeComponent } from './income/income.component';
+import { ExpenseComponent } from './expense/expense.component';
 
 export const routes: Routes = [
     {
@@ -28,7 +31,19 @@ export const routes: Routes = [
         component : ResetPasswordComponent
     },
     {
+        path : 'verify-otp',
+        component : VerifyOtpComponent
+    },
+    {
         path : 'dashboard',
         component : DashboardComponent
+    },
+    {
+        path : 'income',
+        component : IncomeComponent
+    },
+    {
+        path : 'expense',
+        component : ExpenseComponent
     },
 ];
