@@ -17,7 +17,7 @@
       <!-- Form Container -->
       <div class="shadow-xl p-6 bg-white rounded-bl-lg rounded-br-lg xs:p-4">
         <div class="flex justify-center items-center text-black text-sm sm:text-base pb-2 xs:text-sm">
-            MFA: Enter the OTP verification code sent to your email ({{email}}) to sign in to the platform. The OTP is valid for 10 minutes
+            MFA: Enter the OTP verification code sent to your email {{email}} to sign in to the platform. The OTP is valid for 10 minutes
         </div>
         <form [formGroup]="myForm" (ngSubmit)="onSave()">
           <!-- OTP INPUT -->

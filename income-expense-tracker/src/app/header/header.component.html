@@ -12,15 +12,30 @@
   </button>
 
   <!-- Profile Section -->
-  <div class="flex items-center space-x-4 p-4 xs:flex-col xs:items-center xs:space-x-0">
-    <img
-      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-      alt="Profile"
-      class="w-12 h-12 rounded-full"
-    />
-    <div class="text-center xs:mt-2">
-      <div class="text-base font-light xs:text-sm">Michael</div>
-      <div class="text-base font-light xs:text-sm">Michael</div>
+  <div class="flex space-x-4 p-4 xs:flex-col xs:items-center xs:space-x-0">
+    <div class="xs:mt-2 flex">
+      <div class="relative inline-block">
+        <button
+          (click)="toggleDropdown()"
+          class="flex"
+        >
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        alt="Profile"
+        class="w-12 h-12 rounded-full"/>
+        <div class="pl-2">
+        <div class="text-base text-left font-light xs:text-sm">{{firstName}} {{lastName}}</div>
+        <div class="text-base font-light xs:text-sm">{{email}}</div>
+      </div>
+        </button>
+        <div
+          *ngIf="isOpen"
+          class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded-md shadow-lg z-10"
+        >
+        <a (click)="navigateToChangePassword()" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">Change Password</a>
+          <a (click)="logout()" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">Logout</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>

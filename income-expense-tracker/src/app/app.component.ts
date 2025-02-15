@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, Event, NavigationError } from '@angular/router';
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "./header/header.component";
@@ -17,7 +17,15 @@ export class AppComponent implements OnInit, OnDestroy {
   show: boolean = true;
   isSidebarOpen: boolean = false;
   private sidebarSubscription!: Subscription;
-  constructor(private router: Router, private sidebarService: SidebarService) {}
+  constructor(private router: Router, private sidebarService: SidebarService) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationError) {
+        if (event.error.message.includes('NG04002')) {
+          this.router.navigate(['/']);
+        }
+      }
+    });
+  }
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

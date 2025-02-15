@@ -3,6 +3,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TimerService } from '../../services/timer.service';
+import { first, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { userEmail } from '../state/auth.selectors';
+import { VerifyOtpPayload } from '../../models/verify-otp-payload';
+import { verifyOtpStart } from '../state/auth.actions';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth.service';
+import { SignInResponse } from '../../models/sign-in-response';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-verify-otp',
@@ -15,13 +24,16 @@ export class VerifyOtpComponent implements OnInit, OnDestroy{
   myForm!: FormGroup;
   isLoading : boolean = false;
   footerText : string = '';
-  email : string = 'example@gmail.com';
+  email : string = '';
   remainingTime: number = 0;
   timerInterval: any;
   isDisabled : boolean = false;
-  constructor(private fb : FormBuilder,private router : Router, private timerService: TimerService){}
+  payload : VerifyOtpPayload = {}
+  constructor(private fb : FormBuilder,private router : Router, private timerService: TimerService, private toastrService : ToastrService, private authService : AuthService){}
 
   ngOnInit(): void {
+    const encryptedEmail = sessionStorage.getItem('email');
+    this.email = atob(encryptedEmail as string);
     this.isDisabled = true;
     this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`;
     this.buildForm();
@@ -80,13 +92,40 @@ export class VerifyOtpComponent implements OnInit, OnDestroy{
    this.resetTimer();
    this.remainingTime = this.timerService.initializeTimer();
    this.startTimer();
-   
+    const payload = {
+      email : this.email
+    }
+   this.authService.resendOtp(payload).pipe(first()).subscribe({
+    next : (response) => {
+     this.toastrService.success("OTP resent successfully to your email.", "Success");
+    },
+    error : (error : HttpErrorResponse) => {
+      this.toastrService.error(error.error.error, "Failed");
+    }
+   })
   }
 
   onSave(): void {
     if (this.myForm.valid) {
-      this.router.navigate(['/dashboard'])
-      this.resetTimer();
+      this.isLoading = true;
+      this.payload = new VerifyOtpPayload();
+      this.payload.email = this.email;
+      this.payload.otp = this.myForm.get('otp')?.value;
+
+      this.authService.verifyOtp(this.payload).pipe(first()).subscribe({
+        next : (response : SignInResponse) => {
+          this.isLoading = false;
+          sessionStorage.removeItem('email');
+          sessionStorage.setItem('userResponse', btoa(JSON.stringify(response)));
+          this.toastrService.success("OTP verified", "Success");
+          this.router.navigate(['/dashboard']);
+        },
+        error : (error : HttpErrorResponse) => {
+          this.isLoading = false;
+          this.toastrService.error(error.error.error, "Failed");
+        }
+      })
     }
   }
+
 }

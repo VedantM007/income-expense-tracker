@@ -7,6 +7,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { IncomeComponent } from './income/income.component';
 import { ExpenseComponent } from './expense/expense.component';
+import { AuthGuard } from './auth/auth.guard';
+import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 
 export const routes: Routes = [
     {
@@ -36,14 +38,22 @@ export const routes: Routes = [
     },
     {
         path : 'dashboard',
-        component : DashboardComponent
+        component : DashboardComponent,
+        canActivate: [AuthGuard]
     },
     {
         path : 'income',
-        component : IncomeComponent
+        component : IncomeComponent,
+        canActivate: [AuthGuard]
     },
     {
         path : 'expense',
-        component : ExpenseComponent
+        component : ExpenseComponent,
+        canActivate: [AuthGuard]
     },
+    {
+        path : 'change-password',
+        component : ChangePasswordComponent,
+        canActivate : [AuthGuard]
+    }
 ];

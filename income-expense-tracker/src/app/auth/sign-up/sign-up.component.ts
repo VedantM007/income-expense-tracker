@@ -2,6 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SignUpPayload } from '../../models/sign-up-payload';
+import { AuthService } from '../auth.service';
+import { first } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-up',
@@ -16,7 +21,8 @@ export class SignUpComponent implements OnInit{
   isLoading : boolean = false;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
-  constructor(private fb : FormBuilder, private router : Router){}
+  payload : SignUpPayload = {};
+  constructor(private fb : FormBuilder, private router : Router, private authService : AuthService, private toastrService : ToastrService){}
 
   ngOnInit() {
     this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`
@@ -70,6 +76,28 @@ export class SignUpComponent implements OnInit{
 
   onSave(): void {
     if (this.myForm.valid) {
+      this.isLoading = true;
+
+      this.payload = new SignUpPayload();
+
+      this.payload.firstName = this.myForm.get('fname')?.value
+      this.payload.lastName = this.myForm.get('lname')?.value
+      this.payload.email = this.myForm.get('email')?.value
+      this.payload.password = this.myForm.get('confirmPassword')?.value
+
+      this.authService.signUp(this.payload).pipe(first()).subscribe({
+        next : (response)=>{
+          this.isLoading = false;
+          this.myForm.reset();
+          this.toastrService.success('Signed Up Successfully, You can Sign in Now', 'User Created');
+          this.router.navigate(['/sign-in'])
+        },
+        error : (error : HttpErrorResponse)=>{
+          this.isLoading = false;
+          this.toastrService.error(error.error.error, "Error")
+          this.myForm.reset();
+        }
+      })
     }
   }
 }
