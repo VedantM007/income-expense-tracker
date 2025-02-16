@@ -12,10 +12,12 @@ export class CommonService {
   constructor(private http: HttpClient) { }
  
 httpGet<T>(url: string): Observable<T> {
-  const accesstoken = JSON.parse(sessionStorage.getItem('userResponse') as string).token
+  const encryptedUserResponse = sessionStorage.getItem('userResponse');
+  let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
+ const accessToken = userDetails.token
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization' : `Bearer ${accesstoken}`
+    'Authorization' : `Bearer ${accessToken}`
   });
   return this.http.get<T>(url, { headers });
 }
