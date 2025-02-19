@@ -79,6 +79,7 @@ getAllIncomesByUserId(){
     }
   })
 }
+
 allowNumbersOnly(event: KeyboardEvent) {
   const key = event.key;
   if (!/^\d$/.test(key)) {
@@ -139,5 +140,9 @@ deleteIncomeById(){
       this.closeModal();
     }
   })
+}
+
+navigateToEditIncome(id:string){
+ this.router.navigate(['edit-income/' + id])
 }
 }

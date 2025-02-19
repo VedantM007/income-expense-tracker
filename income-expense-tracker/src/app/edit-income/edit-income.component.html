@@ -1,0 +1,161 @@
+<div class="bg-white p-4 flex">
+    <div class="w-1/6"></div>
+    <div class="justify-center w-4/6">
+      <div class="bg-[#FBFBFB] p-5 text-center w-full border border-gray-200">
+        Update Income
+      </div>
+      <div class="border border-t-0 border-gray-200 min-h-[400px] p-4">
+        @if (isResponseLoading == true) {
+            <div class="flex justify-center">
+              <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
+              </div>
+              </div>
+          }
+          @else{
+        <form [formGroup]="myForm" (ngSubmit)="onSave()">
+            <div class="my-2">
+              <input
+                id="title"
+                type="text"
+                formControlName="title"
+                placeholder="Enter title"
+                [ngClass]="{
+                  'border-red-500':
+                    myForm.get('title')?.invalid && myForm.get('title')?.touched
+                }"
+                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+              />
+              <div *ngIf="myForm.get('title')?.touched">
+                <small
+                  *ngIf="myForm.get('title')?.hasError('required')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Title is required.
+                </small>
+                <small
+                  *ngIf="myForm.get('title')?.hasError('maxlength')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Title can't be more than 20 characters
+                </small>
+              </div>
+            </div>
+  
+            <div class="my-6">
+              <input
+                id="amount"
+                type="text"
+                formControlName="amount"
+                placeholder="Enter amount"
+                [ngClass]="{
+                  'border-red-500':
+                    myForm.get('amount')?.invalid && myForm.get('amount')?.touched
+                }"
+                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+                (keypress)="allowNumbersOnly($event)"
+              />
+              <div *ngIf="myForm.get('amount')?.touched">
+                <small
+                  *ngIf="myForm.get('amount')?.hasError('required')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Amount is required.
+                </small>
+                <small
+                  *ngIf="myForm.get('amount')?.hasError('minlength')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Income less than &#8377;1,000 is not allowed
+                </small>
+              </div>
+            </div>
+  
+            <div class="my-6">
+              <input
+                id="date"
+                type="date"
+                formControlName="date"
+                placeholder="Enter date"
+                [ngClass]="{
+                  'border-red-500':
+                    myForm.get('date')?.invalid && myForm.get('date')?.touched
+                }"
+                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
+              />
+              <div *ngIf="myForm.get('date')?.touched">
+                <small
+                  *ngIf="myForm.get('date')?.hasError('required')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Date is required.
+                </small>
+              </div>
+            </div>
+  
+            <div class="my-6">
+              <textarea
+                id="description"
+                formControlName="description"
+                placeholder="Enter description"
+                maxlength="250"
+                [ngClass]="{
+                  'border-red-500':
+                    myForm.get('description')?.invalid &&
+                    myForm.get('description')?.touched
+                }"
+                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
+              >
+              </textarea>
+              <div *ngIf="myForm.get('description')?.touched">
+                <small
+                  *ngIf="myForm.get('description')?.hasError('required')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Description is required.
+                </small>
+              </div>
+            </div>
+            <div class="my-6">
+              <select
+                id="category"
+                formControlName="category"
+                [ngClass]="{
+                  'border-red-500':
+                    myForm.get('category')?.invalid &&
+                    myForm.get('category')?.touched
+                }"
+                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+              >
+                <option value="">Select the category</option>
+                @for (incomeCategory of incomeCategories; track $index) {
+                  <option [value]="incomeCategory.id">{{incomeCategory.value}}</option>
+                }
+              </select>
+              <div *ngIf="myForm.get('category')?.touched">
+                <small
+                  *ngIf="myForm.get('category')?.hasError('required')"
+                  class="text-red-500 xs:text-sm"
+                >
+                  Category is required.
+                </small>
+              </div>
+            </div>
+            <div class="flex justify-between items-center mt-8 xs:mt-8">
+              <button
+                type="submit"
+                [disabled]="myForm.invalid || isLoading"
+                class="px-14 py-2 w-full bg-blue-500 text-sm text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#D2D2D2] disabled:shadow-none disabled:border disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 xs:px-10 xs:py-1 xs:text-sm"
+              >
+                <span
+                  *ngIf="isLoading"
+                  class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
+                ></span>
+                Update Income
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+    <div class="w-1/6"></div>
+</div>

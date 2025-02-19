@@ -1,281 +1,317 @@
 <div class="bg-white p-4">
-    <div
-      class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
-    >
-      Total Expense: <span class="text-red-600">&#8377;{{ totalExpense }}</span>
+  @if (isResponseLoading == true) {
+    <div class="flex justify-center h-screen">
+      <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
+      </div>
+      </div>
+  }
+ @else {
+  <div
+  class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
+>
+  Total Expense: <span class="text-red-600">&#8377;{{ totalExpense }}</span>
+</div>
+<div class="flex">
+  <div class="w-2/5 pt-6">
+    <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
+      Post New Expense
     </div>
-    <div class="flex">
-      <div class="w-2/5 pt-6">
-        <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-          Post New Expense
-        </div>
-        <div class="border border-t-0 border-gray-200 min-h-[400px] p-4">
-          <form [formGroup]="myForm" (ngSubmit)="onSave()">
-            <div class="my-2">
-              <input
-                id="title"
-                type="text"
-                formControlName="title"
-                placeholder="Enter title"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('title')?.invalid && myForm.get('title')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-              />
-              <div *ngIf="myForm.get('title')?.touched">
-                <small
-                  *ngIf="myForm.get('title')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title is required.
-                </small>
-                <small
-                  *ngIf="myForm.get('title')?.hasError('maxlength')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title can't be more than 20 characters
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <input
-                id="amount"
-                type="text"
-                formControlName="amount"
-                placeholder="Enter amount"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('amount')?.invalid && myForm.get('amount')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-                (keypress)="allowNumbersOnly($event)"
-              />
-              <div *ngIf="myForm.get('amount')?.touched">
-                <small
-                  *ngIf="myForm.get('amount')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Amount is required.
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <input
-                id="date"
-                type="date"
-                formControlName="date"
-                placeholder="Enter date"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('date')?.invalid && myForm.get('date')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
-              />
-              <div *ngIf="myForm.get('date')?.touched">
-                <small
-                  *ngIf="myForm.get('date')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Date is required.
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <textarea
-                id="description"
-                formControlName="description"
-                placeholder="Enter description"
-                maxlength="250"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('description')?.invalid &&
-                    myForm.get('description')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
-              >
-              </textarea>
-              <div *ngIf="myForm.get('description')?.touched">
-                <small
-                  *ngIf="myForm.get('description')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Description is required.
-                </small>
-              </div>
-            </div>
-            <div class="my-6">
-              <select
-                id="category"
-                formControlName="category"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('category')?.invalid &&
-                    myForm.get('category')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-              >
-                <option value="">Select the category</option>
-                <option value="1">Education</option>
-                <option value="2">Groceries</option>
-                <option value="3">Health</option>
-                <option value="4">Subscriptions</option>
-                <option value="5">Takeaways</option>
-                <option value="6">Clothing</option>
-                <option value="7">Travelling</option>
-                <option value="8">Other</option>
-              </select>
-              <div *ngIf="myForm.get('category')?.touched">
-                <small
-                  *ngIf="myForm.get('category')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Category is required.
-                </small>
-              </div>
-            </div>
-            <div class="flex justify-between items-center mt-8 xs:mt-8">
-              <button
-                type="submit"
-                [disabled]="myForm.invalid || isLoading"
-                class="px-14 py-2 w-full bg-blue-500 text-sm text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#D2D2D2] disabled:shadow-none disabled:border disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 xs:px-10 xs:py-1 xs:text-sm"
-              >
-                <span
-                  *ngIf="isLoading"
-                  class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
-                ></span>
-                Post Expense
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="w-3/5 py-6 pl-6">
-        <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-          Past Expenses
-        </div>
-        @for (pastExpense of pastExpenses; track $index) {
-          <div
-          class="border border-t-0 border-gray-200 p-8 flex justify-between hover:border-none hover:shadow-custom transition-all duration-300"
-        >
-          <div></div>
-          <div class="flex">
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="size-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <span> {{pastExpense.title}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 8.25H9m6 3H9m3 6-3-3h1.5a3 3 0 1 0 0-6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastExpense.amount}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastExpense.date | date : 'dd/MM/yyyy'}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastExpense.category}} </span>
+    <div class="border border-t-0 border-gray-200 min-h-[400px] p-4">
+      <form [formGroup]="myForm" (ngSubmit)="onSave()">
+        <div class="my-2">
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="Enter title"
+            [ngClass]="{
+              'border-red-500':
+                myForm.get('title')?.invalid && myForm.get('title')?.touched
+            }"
+            class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+          />
+          <div *ngIf="myForm.get('title')?.touched">
+            <small
+              *ngIf="myForm.get('title')?.hasError('required')"
+              class="text-red-500 xs:text-sm"
+            >
+              Title is required.
+            </small>
+            <small
+              *ngIf="myForm.get('title')?.hasError('maxlength')"
+              class="text-red-500 xs:text-sm"
+            >
+              Title can't be more than 20 characters
+            </small>
           </div>
-          <div>
-            <span>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="blue"
-                  class="size-6"
-                >
-                  <path
-                    d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"
-                  />
-                  <path
-                    d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"
-                  />
-                </svg></button
+        </div>
+
+        <div class="my-6">
+          <input
+            id="amount"
+            type="text"
+            formControlName="amount"
+            placeholder="Enter amount"
+            [ngClass]="{
+              'border-red-500':
+                myForm.get('amount')?.invalid && myForm.get('amount')?.touched
+            }"
+            class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+            (keypress)="allowNumbersOnly($event)"
+          />
+          <div *ngIf="myForm.get('amount')?.touched">
+            <small
+              *ngIf="myForm.get('amount')?.hasError('required')"
+              class="text-red-500 xs:text-sm"
+            >
+              Amount is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="my-6">
+          <input
+            id="date"
+            type="date"
+            formControlName="date"
+            placeholder="Enter date"
+            [ngClass]="{
+              'border-red-500':
+                myForm.get('date')?.invalid && myForm.get('date')?.touched
+            }"
+            class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
+          />
+          <div *ngIf="myForm.get('date')?.touched">
+            <small
+              *ngIf="myForm.get('date')?.hasError('required')"
+              class="text-red-500 xs:text-sm"
+            >
+              Date is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="my-6">
+          <textarea
+            id="description"
+            formControlName="description"
+            placeholder="Enter description"
+            maxlength="250"
+            [ngClass]="{
+              'border-red-500':
+                myForm.get('description')?.invalid &&
+                myForm.get('description')?.touched
+            }"
+            class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
+          >
+          </textarea>
+          <div *ngIf="myForm.get('description')?.touched">
+            <small
+              *ngIf="myForm.get('description')?.hasError('required')"
+              class="text-red-500 xs:text-sm"
+            >
+              Description is required.
+            </small>
+          </div>
+        </div>
+        <div class="my-6">
+          <select
+            id="category"
+            formControlName="category"
+            [ngClass]="{
+              'border-red-500':
+                myForm.get('category')?.invalid &&
+                myForm.get('category')?.touched
+            }"
+            class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+          >
+            <option value="">Select the category</option>
+            @for (expenseCategory of expenseCategories; track $index) {
+              <option [value]="expenseCategory.id">{{expenseCategory.value}}</option>
+            }
+          </select>
+          <div *ngIf="myForm.get('category')?.touched">
+            <small
+              *ngIf="myForm.get('category')?.hasError('required')"
+              class="text-red-500 xs:text-sm"
+            >
+              Category is required.
+            </small>
+          </div>
+        </div>
+        <div class="flex justify-between items-center mt-8 xs:mt-8">
+          <button
+            type="submit"
+            [disabled]="myForm.invalid || isLoading"
+            class="px-14 py-2 w-full bg-blue-500 text-sm text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#D2D2D2] disabled:shadow-none disabled:border disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 xs:px-10 xs:py-1 xs:text-sm"
+          >
+            <span
+              *ngIf="isLoading"
+              class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
             ></span>
-            <span class="pl-2">
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="red"
-                  class="size-6"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </span>
-          </div>
+            Post Expense
+          </button>
         </div>
-        }
-      </div>
+      </form>
     </div>
   </div>
+  <div class="w-3/5 py-6 pl-6">
+    <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
+      Past Expenses
+    </div>
+    @if(pastExpenses.length == 0){
+      <div class="flex justify-center p-10 text-gray-500">
+       No Past Expense found
+      </div>
+     }
+     @else {
+    @for (pastExpense of pastExpenses; track $index) {
+
+      <div
+      class="border border-t-0 border-gray-200 p-8 flex justify-between hover:border-none hover:shadow-custom transition-all duration-300"
+    >
+      <div></div>
+      <div class="flex">
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span> {{pastExpense.title}} </span>
+        &nbsp;&nbsp;
+        <span> - </span>
+        &nbsp;&nbsp;
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 8.25H9m6 3H9m3 6-3-3h1.5a3 3 0 1 0 0-6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+        </span>
+        <span> {{pastExpense.amount}} </span>
+        &nbsp;&nbsp;
+        <span> - </span>
+        &nbsp;&nbsp;
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+            />
+          </svg>
+        </span>
+        <span> {{pastExpense.date | date : 'dd/MM/yyyy'}} </span>
+        &nbsp;&nbsp;
+        <span> - </span>
+        &nbsp;&nbsp;
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
+          </svg>
+        </span>
+        <span> {{pastExpense.categoryName}} </span>
+      </div>
+      <div>
+        <span>
+          <button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="blue"
+              class="size-6"
+            >
+              <path
+                d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"
+              />
+              <path
+                d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"
+              />
+            </svg></button
+        ></span>
+        <span class="pl-2">
+          <button (click)="openModal(pastExpense._id)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="red"
+              class="size-6"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </span>
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>
+ }
+  </div>
   
+
+  <!-- Delete Confirmation Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-10 bg-gray-500/75 transition-opacity duration-300 ease-out"
+[class.opacity-100]="isOpen" [class.opacity-0]="!isOpen"
+(click)="closeModal()">
+
+<!-- Modal Wrapper -->
+<div class="fixed top-10 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-out"
+  [class.opacity-100]="isOpen" [class.translate-y-0]="isOpen"
+  [class.opacity-0]="!isOpen" [class.-translate-y-10]="!isOpen"
+  (click)="$event.stopPropagation()">
+
+<!-- Modal Content -->
+<div class="bg-white shadow-xl min-w-[30rem] p-6">
+ <div class="flex items-center">
+   <h3 class="text-lg font-semibold text-gray-900 mb-4">Do you want to delete the selected expense?</h3>
+ </div>
+ <div class="mt-4 flex justify-end space-x-2">
+   <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="deleteExpenseById()">Yes</button>
+   <button class="bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300" (click)="closeModal()">No</button>
+ </div>
+</div>
+
+</div>
+</div>

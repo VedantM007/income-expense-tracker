@@ -49,4 +49,16 @@ httpDelete<T>(url:string) : Observable<T>{
   });
   return this.http.delete<T>(url, { headers });
 } 
+
+httpPut(url:string, param : string, payload : any) : Observable<any>{
+  const encryptedUserResponse = sessionStorage.getItem('userResponse');
+    let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
+   const accessToken = userDetails.token
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization' : `Bearer ${accessToken}`
+  });
+  const urlWithParam = `${url}?_id=${param}`;
+  return this.http.put(urlWithParam ,payload, {headers})
+}
 }

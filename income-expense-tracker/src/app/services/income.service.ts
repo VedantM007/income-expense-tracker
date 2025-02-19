@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { environment } from '../../environments/environment';
 import { IncomePayload } from '../models/income-payload';
+import { Income } from '../models/income';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class IncomeService {
     return this.commonService.httpPostWithAuth(`${environment.apiURL}/income/addIncome`, payload)
   }
 
-  getAllIncomesByUserId(userId : string):Observable<any>{
+  getAllIncomesByUserId(userId : string):Observable<Income[]>{
     return this.commonService.httpGet(`${environment.apiURL}/income/getAllIncomesByUserId?userId=${userId}`);
   }
 
@@ -28,5 +29,11 @@ export class IncomeService {
     return this.commonService.httpDelete(`${environment.apiURL}/income/deleteIncomeById?id=${id}`);
   }
 
+  getIncomeByIncomeId(incomeId : string):Observable<Income>{
+    return this.commonService.httpGet(`${environment.apiURL}/income/getIncomeByIncomeId?_id=${incomeId}`)
+  }
 
+  updateIncome(incomeId : string, payload:IncomePayload):Observable<any>{
+    return this.commonService.httpPut(`${environment.apiURL}/income/updateIncome`, incomeId, payload);
+  }
 }
