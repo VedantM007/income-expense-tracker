@@ -140,4 +140,7 @@ export class ExpenseComponent implements OnInit {
       }
     })
   }
+  navigateToEditExpense(id:string){
+    this.router.navigate(['edit-expense/' + id])
+   }
 }

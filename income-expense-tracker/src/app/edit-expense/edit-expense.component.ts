@@ -1,53 +1,53 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../models/category';
-import { IncomeService } from '../services/income.service';
-import { first } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { IncomePayload } from '../models/income-payload';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ExpenseService } from '../services/expense.service';
 import { ToastrService } from 'ngx-toastr';
 import { SignInResponse } from '../models/sign-in-response';
+import { first } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Income } from '../models/income';
-import { IncomePayload } from '../models/income-payload';
 
 @Component({
-  selector: 'app-edit-income',
+  selector: 'app-edit-expense',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './edit-income.component.html',
-  styleUrl: './edit-income.component.css'
+  templateUrl: './edit-expense.component.html',
+  styleUrl: './edit-expense.component.css'
 })
-export class EditIncomeComponent implements OnInit {
-
-  incomeId : string = "";
+export class EditExpenseComponent implements OnInit {
+  expenseId : string = "";
   myForm!:FormGroup;
   isLoading : boolean = false;
-  incomeCategories : Category[] = [];
+  expenseCategories : Category[] = [];
   isResponseLoading : boolean = false;
   payload : IncomePayload = {};
   userId : string = "";
-  constructor(private activatedRoute : ActivatedRoute, private fb : FormBuilder, private incomeService : IncomeService, private toastrService : ToastrService, private router : Router){}
-  
+
+  constructor(private activatedRoute : ActivatedRoute, private fb : FormBuilder, private expenseService : ExpenseService, private toastrService : ToastrService, private router : Router){}
+
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      this.incomeId = params['id'];
+      this.expenseId = params['id'];
     })
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
     let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
     this.userId = userDetails.userId;
     this.buildForm();
-    this.getAllIncomeCategories();
+    this.getAllExpenseCategories();
 
-    if(this.incomeId !== ""){
-       this.getIncomeByIncomeId();
+    if(this.expenseId !== ""){
+       this.getexpenseByExpenseId();
     }
   }
 
   buildForm(){
     this.myForm = this.fb.group({
       title : ['', [Validators.required, Validators.maxLength(20)]],
-      amount : ['', [Validators.required, Validators.minLength(4),
+      amount : ['', [Validators.required,
        Validators.pattern(/^\d+$/)]],
       date : ['', Validators.required],
       description : ['', Validators.required],
@@ -60,20 +60,21 @@ export class EditIncomeComponent implements OnInit {
       event.preventDefault();
     }
   }
-  getAllIncomeCategories(){
-    this.incomeService.getAllIncomeCategories().pipe(first()).subscribe({
+
+  getAllExpenseCategories(){
+    this.expenseService.getAllExpenseCategories().pipe(first()).subscribe({
       next : (response : Category[])=>{
-        this.incomeCategories =response;
+        this.expenseCategories =response;
       },
       error : (error : HttpErrorResponse)=>{
-         this.toastrService.error(error.error.error, "Error while loading Income Categories");
+         this.toastrService.error(error.error.error, "Error while loading Expense Categories");
       }
     })
   }
 
-  getIncomeByIncomeId(){
+  getexpenseByExpenseId(){
     this.isResponseLoading = true;
-    this.incomeService.getIncomeByIncomeId(this.incomeId).pipe(first()).subscribe({
+    this.expenseService.getExpenseByExpenseId(this.expenseId).pipe(first()).subscribe({
       next : (response : Income)=>{
        this.myForm.get('title')?.setValue(response.title);
        this.myForm.get('amount')?.setValue((response.amount).toString());
@@ -84,10 +85,11 @@ export class EditIncomeComponent implements OnInit {
       },
       error : (error :HttpErrorResponse)=>{
         this.isResponseLoading = false;
-        this.toastrService.error(error.error.error, "Error while loading Income Details");
+        this.toastrService.error(error.error.error, "Error while loading Expense Details");
       }
     })
   }
+
   onSave(): void {
     if (this.myForm.valid) {
     this.isLoading = true;
@@ -101,11 +103,11 @@ export class EditIncomeComponent implements OnInit {
     this.payload.category = parseInt(this.myForm.get('category')?.value);
     this.payload.userId = this.userId;
 
-      this.incomeService.updateIncome(this.incomeId, this.payload).pipe(first()).subscribe({
+      this.expenseService.updateExpense(this.expenseId, this.payload).pipe(first()).subscribe({
         next : (response)=>{
           this.isLoading = false;
-          this.toastrService.success('Selected Income updated', 'Success');
-          this.router.navigate(['income']);
+          this.toastrService.success('Selected Expense updated', 'Success');
+          this.router.navigate(['expense']);
         },
         error : (error : HttpErrorResponse)=>{
           this.isLoading = false;

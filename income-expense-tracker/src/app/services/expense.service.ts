@@ -5,6 +5,7 @@ import { Category } from '../models/category';
 import { environment } from '../../environments/environment';
 import { IncomePayload } from '../models/income-payload';
 import { Expense } from '../models/expense';
+import { Income } from '../models/income';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,13 @@ export class ExpenseService {
 
   deleteExpenseById(id:string):Observable<any>{
     return this.commonService.httpDelete(`${environment.apiURL}/expense/deleteExpenseById?id=${id}`);
+  }
+
+  getExpenseByExpenseId(expenseId : string):Observable<Income>{
+    return this.commonService.httpGet(`${environment.apiURL}/expense/getExpenseByExpenseId?_id=${expenseId}`)
+  }
+
+  updateExpense(expenseId : string, payload:IncomePayload):Observable<any>{
+    return this.commonService.httpPut(`${environment.apiURL}/expense/updateExpense`, expenseId, payload);
   }
 }

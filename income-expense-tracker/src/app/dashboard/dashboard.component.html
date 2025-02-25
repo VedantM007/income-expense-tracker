@@ -1,24 +1,31 @@
 <div class="bg-white p-4">
+  @if (isResponseLoading == true) {
+    <div class="flex justify-center h-screen">
+      <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
+      </div>
+      </div>
+  }
+  @else{
   <div class="flex">
     <div
       class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
     >
-      Balance: <span class="text-violet-600">&#8377;{{ balance }}</span>
+      Balance: <span class="text-violet-600">&#8377;{{ dashboardStats?.balance }}</span>
     </div>
     <div
       class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
     >
-      Total Income: <span class="text-green-600">&#8377;{{ totalIncome }}</span>
+      Total Income: <span class="text-green-600">&#8377;{{ dashboardStats?.totalIncome }}</span>
     </div>
     <div
       class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
     >
-      Total Expense: <span class="text-red-600">&#8377;{{ totalExpense }}</span>
+      Total Expense: <span class="text-red-600">&#8377;{{ dashboardStats?.totalExpense }}</span>
     </div>
   </div>
 
   <div class="flex">
-    <div class="w-3/4 pt-8">
+    <div class="w-2/3 pt-8">
       <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
         Income Chart
       </div>
@@ -30,20 +37,20 @@
         <div id="income-chart" class="h-[500px]"></div>
       </div>
     </div>
-    <div class="w-1/4 pt-8 ml-3">
+    <div class="w-1/3 pt-8 ml-3">
       <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
         Recent History
       </div>
       <div
         class="border border-gray-200 text-center p-6 border-t-0 text-green-500 font-light hover:border-none hover:shadow-new transition-all duration-300 "
       >
-        + 1000 Bonus
+        + {{ dashboardStats?.recentHistory?.income?.amount}} {{dashboardStats?.recentHistory?.income?.title}}
       </div>
       <div
         class="border border-gray-200 text-center p-6 border-t-0 text-red-500 font-light
         hover:border-none hover:shadow-new transition-all duration-300 "
       >
-        - 80 Dinning out
+        - {{ dashboardStats?.recentHistory?.expense?.amount}} {{dashboardStats?.recentHistory?.expense?.title}}
       </div>
 <div class="mt-10">
   <div
@@ -54,8 +61,8 @@
 <div
   class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
 >
-  <div class="w-1/2 border-r-2 border-black">Minimum: 200</div>
-  <div class="w-1/2">Maximum: 3000</div>
+  <div class="w-1/2 border-r-2 border-black">Minimum: {{dashboardStats?.minIncome?.amount}}</div>
+  &nbsp;<div class="w-1/2">Maximum: {{dashboardStats?.maxIncome?.amount}}</div>
 </div>
 <div
   class="border border-gray-200 text-center border-t-0 p-4 bg-gray-100"
@@ -65,8 +72,8 @@
 <div
   class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
 >
-  <div class="w-1/2 border-r-2 border-black">Minimum: 25</div>
-  <div class="w-1/2">Maximum: 100</div>
+  <div class="w-1/2 border-r-2 border-black">Minimum: {{dashboardStats?.minExpense?.amount}}</div>
+  <div class="w-1/2">Maximum: {{dashboardStats?.maxExpense?.amount}}</div>
 </div>
 </div>
     </div>
@@ -83,4 +90,5 @@
       <div id="expense-chart" class="h-[500px]"></div>
     </div>
   </div>
+}
 </div>

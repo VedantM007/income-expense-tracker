@@ -1,5 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import * as echarts from 'echarts';
+import { DashboardService } from '../services/dashboard.service';
+import { SignInResponse } from '../models/sign-in-response';
+import { first } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { DashboardStats } from '../models/dashboard-stats';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,12 +19,25 @@ export class DashboardComponent implements OnInit{
   balance : number = 4500;
   totalExpense : number = 500;
   totalIncome : number = 5000;
+  userId : string = "";
+  dashboardStats?: DashboardStats;
+  isResponseLoading : boolean = false;
+  constructor(private dashboardService : DashboardService, private toastrService : ToastrService){}
+
   ngOnInit(): void {
-    setTimeout(()=>{
+    const encryptedUserResponse = sessionStorage.getItem('userResponse');
+    const userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
+     this.userId = userDetails.userId;
+
+     if(this.userId !== ""){
+      this.getAllDashboardStats();
+   }
+      setTimeout(()=>{
       this.incomeChart();
       this.expenseChart();
-    },500)
+    },1000)
       window.dispatchEvent(new Event('resize'));
+   
   }
 
 
@@ -148,6 +167,20 @@ export class DashboardComponent implements OnInit{
 
     myChart.setOption(option);
     
+  }
+
+  getAllDashboardStats(){
+    this.isResponseLoading = true;
+    this.dashboardService.getDashboardStats(this.userId).pipe(first()).subscribe({
+      next: (response : DashboardStats)=>{
+        this.dashboardStats = response;
+        this.isResponseLoading = false;
+      },
+      error : (err : HttpErrorResponse)=>{
+       this.toastrService.error(err.error.error, "Error While loading Dashboard Stats")
+       this.isResponseLoading = false;
+      }
+    })
   }
 
 }

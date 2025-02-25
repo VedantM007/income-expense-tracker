@@ -10,6 +10,7 @@ import { ExpenseComponent } from './expense/expense.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { EditIncomeComponent } from './edit-income/edit-income.component';
+import { EditExpenseComponent } from './edit-expense/edit-expense.component';
 
 export const routes: Routes = [
     {
@@ -60,6 +61,11 @@ export const routes: Routes = [
     {
         path : 'edit-income/:id',
         component : EditIncomeComponent,
+        canActivate : [AuthGuard]
+    },
+    {
+        path : 'edit-expense/:id',
+        component : EditExpenseComponent,
         canActivate : [AuthGuard]
     }
 ];
