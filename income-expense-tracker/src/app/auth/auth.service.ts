@@ -5,7 +5,7 @@ import { SignUpPayload } from '../models/sign-up-payload';
 import { SignInPayload } from '../models/sign-in-payload';
 import { SignInResponse } from '../models/sign-in-response';
 import { VerifyOtpPayload } from '../models/verify-otp-payload';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.dev';
 import { Router } from '@angular/router';
 import { ChangePasswordModel } from '../models/change-password-model';
 

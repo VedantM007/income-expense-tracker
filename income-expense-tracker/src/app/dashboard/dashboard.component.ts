@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit{
           this.expenseChart();
         }
 
-    },1000)
+    },2000)
       window.dispatchEvent(new Event('resize'));
    
   }

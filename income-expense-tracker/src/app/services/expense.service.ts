@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CommonService } from './common.service';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.dev';
 import { IncomePayload } from '../models/income-payload';
 import { Expense } from '../models/expense';
 import { Income } from '../models/income';
