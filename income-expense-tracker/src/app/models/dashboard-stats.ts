@@ -6,10 +6,10 @@ export interface DashboardStats {
     totalIncome: number
     totalExpense: number
     recentHistory: RecentHistory
-    minIncome: Income
-    maxIncome: Income
-    minExpense: Expense
-    maxExpense: Expense
+    minIncome: number
+    maxIncome: number
+    minExpense: number
+    maxExpense: number
 }
 
 export interface RecentHistory {

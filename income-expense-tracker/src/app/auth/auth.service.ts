@@ -27,8 +27,8 @@ export class AuthService {
     return this.commonService.httpPost(`${environment.apiURL}/auth/verifyOtp`, payload)
   }
 
-  resendOtp({email} : {email : string}):Observable<any>{
-    return this.commonService.httpPost(`${environment.apiURL}/auth/resendOtp`, email)
+  resendOtp(payload: { email: string }): Observable<any> {
+    return this.commonService.httpPost(`${environment.apiURL}/auth/resendOtp`, payload);
   }
   
   changePassword(payload : ChangePasswordModel):Observable<any>{

@@ -6,6 +6,9 @@ import { first } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DashboardStats } from '../models/dashboard-stats';
 import { ToastrService } from 'ngx-toastr';
+import { IncomeService } from '../services/income.service';
+import { Income } from '../models/income';
+import { ExpenseService } from '../services/expense.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,13 +19,20 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DashboardComponent implements OnInit{
 
-  balance : number = 4500;
-  totalExpense : number = 500;
-  totalIncome : number = 5000;
+  balance : number = 0;
+  totalExpense : number = 0;
+  totalIncome : number = 0;
   userId : string = "";
   dashboardStats?: DashboardStats;
   isResponseLoading : boolean = false;
-  constructor(private dashboardService : DashboardService, private toastrService : ToastrService){}
+  incomes : Income[] = [];
+  incomeDateArray?: string[];
+  incomeAmountArray?: number[];
+  expenseDateArray?: string[];
+  expenseAmountArray?: number[];
+  maxIncome : number = 0;
+  maxExpense : number = 0;
+  constructor(private dashboardService : DashboardService, private toastrService : ToastrService, private incomeService : IncomeService, private expenseService : ExpenseService){}
 
   ngOnInit(): void {
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
@@ -31,24 +41,73 @@ export class DashboardComponent implements OnInit{
 
      if(this.userId !== ""){
       this.getAllDashboardStats();
+      this.getAllIncomesByUserId();
+      this.getAllExpensesByUserId();
    }
       setTimeout(()=>{
-      this.incomeChart();
-      this.expenseChart();
+        if(this.incomeDateArray?.length !== 0 && this.incomeAmountArray?.length !== 0){
+          this.incomeChart();
+        }
+        if(this.expenseDateArray?.length !== 0 && this.expenseAmountArray?.length !== 0){
+          this.expenseChart();
+        }
+
     },1000)
       window.dispatchEvent(new Event('resize'));
    
   }
 
+ getAllIncomesByUserId(){
+  this.incomeService.getAllIncomesByUserId(this.userId).subscribe({
+    next : (response)=>{
+      const formattedDates = response.map((item) => {
+        const date = new Date(item.date); // Convert to Date object
+        const day = (`0${date.getDate()}`).slice(-2); // Ensures two digits
+        const month = (`0${date.getMonth() + 1}`).slice(-2); // Ensures two digits (Months are 0-based)
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      });
+
+      this.incomeAmountArray = response.map((item) => item.amount)
+       this.incomeDateArray = formattedDates
+
+       console.log(formattedDates)
+       console.log(this.incomeAmountArray)
+    },
+    error : (error : HttpErrorResponse)=>{
+      this.toastrService.error(error.error.error, "Error While loading Incomes")
+    }
+  })
+ }
+
+ getAllExpensesByUserId(){
+  this.expenseService.getAllExpensesByUserId(this.userId).subscribe({
+    next : (response)=>{
+      const formattedDates = response.map((item) => {
+        const date = new Date(item.date); // Convert to Date object
+        const day = (`0${date.getDate()}`).slice(-2); // Ensures two digits
+        const month = (`0${date.getMonth() + 1}`).slice(-2); // Ensures two digits (Months are 0-based)
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      });
+
+      this.expenseAmountArray = response.map((item) => item.amount)
+       this.expenseDateArray = formattedDates
+    },
+    error : (error : HttpErrorResponse)=>{
+      this.toastrService.error(error.error.error, "Error While loading Expenses")
+    }
+  })
+ }
 
   incomeChart(): void {
     const chartDom = document.getElementById('income-chart')!;
     const myChart = echarts.init(chartDom);
 
     // X-axis and Y-axis fixed values
-    const xAxisLabels = ['01-02-2024', '02-02-2024', '03-02-2024', '04-02-2024', '05-02-2024'];
+    const xAxisLabels = this.incomeDateArray;
     // Data for the series
-    const yAxisValues = [3000, 500, 200, 375, 1000]; // Y-axis values corresponding to the dates on X-axis
+    const yAxisValues = this.incomeAmountArray;
 
     const option = {
       xAxis: {
@@ -62,8 +121,8 @@ export class DashboardComponent implements OnInit{
       yAxis: {
         type: 'value',
         min: 0, // Start value of the Y-axis
-        max: 3000, // End value of the Y-axis
-        interval: 500, // Interval between values
+        max: this.maxIncome, // End value of the Y-axis
+        interval: 1000, // Interval between values
         splitLine: {
           show: true
         },
@@ -110,9 +169,9 @@ export class DashboardComponent implements OnInit{
     const myChart = echarts.init(chartDom);
 
     // X-axis and Y-axis fixed values
-    const xAxisLabels = ['01-02-2024', '02-02-2024', '03-02-2024', '04-02-2024', '05-02-2024'];
+    const xAxisLabels = this.expenseDateArray;
     // Data for the series
-    const yAxisValues = [50, 100, 30, 25, 80]; // Y-axis values corresponding to the dates on X-axis
+    const yAxisValues = this.expenseAmountArray;
 
     const option = {
       xAxis: {
@@ -126,8 +185,8 @@ export class DashboardComponent implements OnInit{
       yAxis: {
         type: 'value',
         min: 0, // Start value of the Y-axis
-        max: 100, // End value of the Y-axis
-        interval: 10, // Interval between values
+        max: this.maxExpense, // End value of the Y-axis
+        interval: 500, // Interval between values
         splitLine: {
           show: true
         },
@@ -175,6 +234,8 @@ export class DashboardComponent implements OnInit{
       next: (response : DashboardStats)=>{
         this.dashboardStats = response;
         this.isResponseLoading = false;
+        this.maxIncome = response.maxIncome;
+        this.maxExpense = response.maxExpense;
       },
       error : (err : HttpErrorResponse)=>{
        this.toastrService.error(err.error.error, "Error While loading Dashboard Stats")
