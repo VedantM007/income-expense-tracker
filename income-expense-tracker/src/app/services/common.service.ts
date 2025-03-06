@@ -22,6 +22,13 @@ httpGet<T>(url: string): Observable<T> {
   return this.http.get<T>(url, { headers });
 }
 
+httpGetWithoutAuth<T>(url: string): Observable<T>{
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+  return this.http.get<T>(url, { headers });
+}
+
 httpPost(url:string, payload : any) : Observable<any>{
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -61,4 +68,13 @@ httpPut(url:string, param : string, payload : any) : Observable<any>{
   const urlWithParam = `${url}?_id=${param}`;
   return this.http.put(urlWithParam ,payload, {headers})
 }
+
+httpPostWithTokenParam(url:string, token : string, payload : any) : Observable<any>{
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+  const urlWithParam = `${url}?token=${token}`;
+  return this.http.post(urlWithParam,payload,{headers})
+}
+
 }

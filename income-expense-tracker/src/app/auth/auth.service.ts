@@ -34,6 +34,20 @@ export class AuthService {
   changePassword(payload : ChangePasswordModel):Observable<any>{
     return this.commonService.httpPostWithAuth(`${environment.apiURL}/auth/changePassword`, payload)
   }
+
+  forgotPassword(payload : {email : string}) : Observable<any>{
+   return this.commonService.httpPost(`${environment.apiURL}/auth/forgotPassword`, payload)
+  }
+
+  verifyToken(token : string) : Observable<any>{
+    return this.commonService.httpGetWithoutAuth(`${environment.apiURL}/auth/verifyToken?token=${token}`);
+  }
+
+  resetPassword(payload : {newPassword : string}, token : string): Observable<any>{
+    return this.commonService.httpPostWithTokenParam(`${environment.apiURL}/auth/resetPassword`, token, payload)
+  }
+
+
   isSignedIn(): boolean {
     const userResponse = sessionStorage.getItem('userResponse');
   
