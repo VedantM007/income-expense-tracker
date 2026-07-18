@@ -2,6 +2,9 @@ import { Expense } from "./expense"
 import { Income } from "./income"
 
 export interface DashboardStats {
+ status : number,
+ success : string,
+ data : {
     balance: number
     totalIncome: number
     totalExpense: number
@@ -10,6 +13,7 @@ export interface DashboardStats {
     maxIncome: number
     minExpense: number
     maxExpense: number
+ }
 }
 
 export interface RecentHistory {

@@ -10,17 +10,17 @@
     <div
       class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
     >
-      Balance: <span class="text-violet-600">&#8377;{{ dashboardStats?.balance }}</span>
+      Balance: <span class="text-violet-600">&#8377;{{ dashboardStats?.data?.balance }}</span>
     </div>
     <div
       class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
     >
-      Total Income: <span class="text-green-600">&#8377;{{ dashboardStats?.totalIncome }}</span>
+      Total Income: <span class="text-green-600">&#8377;{{ dashboardStats?.data?.totalIncome }}</span>
     </div>
     <div
       class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
     >
-      Total Expense: <span class="text-red-600">&#8377;{{ dashboardStats?.totalExpense }}</span>
+      Total Expense: <span class="text-red-600">&#8377;{{ dashboardStats?.data?.totalExpense }}</span>
     </div>
   </div>
 
@@ -48,7 +48,7 @@
       <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
         Recent History
       </div>
-      @if (dashboardStats?.recentHistory?.income == null) {
+      @if (dashboardStats?.data?.recentHistory?.income == null) {
         <div class="text-center p-6 border border-gray-200 text-gray-400">
           No Recent Income History
         </div>
@@ -57,11 +57,11 @@
         <div
         class="border border-gray-200 text-center p-6 border-t-0 text-green-500 font-light hover:border-none hover:shadow-new transition-all duration-300"
       >
-        + &#8377; {{ dashboardStats?.recentHistory?.income?.amount}} {{dashboardStats?.recentHistory?.income?.title}}
+        + &#8377; {{ dashboardStats?.data?.recentHistory?.income?.amount}} {{dashboardStats?.data?.recentHistory?.income?.title}}
       </div>
       }
 
-     @if (dashboardStats?.recentHistory?.expense == null) {
+     @if (dashboardStats?.data?.recentHistory?.expense == null) {
       <div class="text-center p-6 border border-gray-200 text-gray-400">
         No Recent Expense History
       </div>
@@ -71,8 +71,8 @@
       class="border border-gray-200 text-center p-6 border-t-0 text-red-500 font-light
       hover:border-none hover:shadow-new transition-all duration-300 "
     >
-      -  &#8377; {{ dashboardStats?.recentHistory?.expense?.amount}} {{dashboardStats?.recentHistory?.expense?.title}}
-    </div>
+      -  &#8377; {{ dashboardStats?.data?.recentHistory?.expense?.amount}} {{dashboardStats?.data?.recentHistory?.expense?.title}}
+    </div>  
      }
 <div class="mt-10">
   <div
@@ -83,8 +83,8 @@
 <div
   class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
 >
-  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.minIncome}}</div>
-  &nbsp;<div class="w-1/2">Maximum: &#8377; {{dashboardStats?.maxIncome}}</div>
+  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.data?.minIncome}}</div>
+  &nbsp;<div class="w-1/2">Maximum: &#8377; {{dashboardStats?.data?.maxIncome}}</div>
 </div>
 <div
   class="border border-gray-200 text-center border-t-0 p-4 bg-gray-100"
@@ -94,8 +94,8 @@
 <div
   class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
 >
-  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.minExpense}}</div>
-  <div class="w-1/2">Maximum: &#8377; {{dashboardStats?.maxExpense}}</div>
+  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.data?.minExpense}}</div>
+  <div class="w-1/2">Maximum: &#8377; {{dashboardStats?.data?.maxExpense}}</div>
 </div>
 </div>
     </div>

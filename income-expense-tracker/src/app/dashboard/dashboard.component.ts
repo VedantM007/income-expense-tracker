@@ -234,8 +234,8 @@ export class DashboardComponent implements OnInit{
       next: (response : DashboardStats)=>{
         this.dashboardStats = response;
         this.isResponseLoading = false;
-        this.maxIncome = response.maxIncome;
-        this.maxExpense = response.maxExpense;
+        this.maxIncome = response.data.maxIncome;
+        this.maxExpense = response.data.maxExpense;
       },
       error : (err : HttpErrorResponse)=>{
        this.toastrService.error(err.error.error, "Error While loading Dashboard Stats")
