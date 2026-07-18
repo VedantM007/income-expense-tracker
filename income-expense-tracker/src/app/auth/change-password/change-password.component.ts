@@ -30,7 +30,7 @@ export class ChangePasswordComponent implements OnInit {
     this.buildForm();
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
     let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string))
-    this.userId = userDetails.userId;
+    this.userId = userDetails.data.userId;
   }
   
   buildForm(){

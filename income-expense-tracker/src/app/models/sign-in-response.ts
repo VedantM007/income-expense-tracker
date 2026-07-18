@@ -1,7 +1,11 @@
 export interface SignInResponse {
-    userId : string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    token : string
+    status : number,
+    success : string,
+    data : {
+        userId : string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        token : string
+    }
 }

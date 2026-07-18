@@ -38,11 +38,15 @@ export class AuthEffects {
         this.authService.verifyOtp(action).pipe(
           map((response) =>
             verifyOtpSuccess({
-              userId: response.userId,
-              firstName: response.firstName,
-              lastName: response.lastName,
-              email: response.email,
-              token: response.token,
+              status: response.status,
+              success: response.success,
+              data: {
+                userId: response.data.userId,
+                firstName: response.data.firstName,
+                lastName: response.data.lastName,
+                email: response.data.email,
+                token: response.data.token,
+              }
             })
           ),
           catchError((error) =>

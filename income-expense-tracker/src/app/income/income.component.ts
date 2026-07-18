@@ -35,7 +35,7 @@ constructor(private fb : FormBuilder, private router : Router, private incomeSer
 ngOnInit(): void {
   const encryptedUserResponse = sessionStorage.getItem('userResponse');
   const userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
-   this.userId = userDetails.userId;
+   this.userId = userDetails.data.userId;
   this.buildForm();
   this.getAllIncomeCategories();
    if(encryptedUserResponse){

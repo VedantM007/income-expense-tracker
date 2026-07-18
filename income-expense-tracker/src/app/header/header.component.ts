@@ -25,12 +25,12 @@ export class HeaderComponent implements OnInit{
     const userResponse = sessionStorage.getItem('userResponse');
     if(userResponse){
       this.userResponse = JSON.parse(atob(userResponse as string));
-      this.firstName = this.userResponse.firstName;
-      this.lastName = this.userResponse.lastName;
-      this.email = this.userResponse.email;
+      this.firstName = this.userResponse.data.firstName;
+      this.lastName = this.userResponse .data.lastName;
+      this.email = this.userResponse.data.email;
     }
   }
-  toggleSidebar() {
+  toggleSidebar() { 
     this.sidebarService.toggleSidebar();
   }
   toggleDropdown() {

@@ -15,6 +15,8 @@ export class AuthGuard implements CanActivate {
     } else {
       // Redirect to login page if not authenticated
       this.router.navigate(['/']);
+      sessionStorage.removeItem('email')
+      sessionStorage.removeItem('userResponse')
       this.toastr.error('Please Sign In again', 'Session Timeout')
       return false;
     }

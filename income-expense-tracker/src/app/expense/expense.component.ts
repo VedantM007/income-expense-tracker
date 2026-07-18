@@ -35,7 +35,7 @@ export class ExpenseComponent implements OnInit {
   ngOnInit(): void {
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
     const userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
-     this.userId = userDetails.userId;
+     this.userId = userDetails.data.userId;
     this.buildForm();
     this.pastExpenses = []
     this.getAllExpenseCategories();

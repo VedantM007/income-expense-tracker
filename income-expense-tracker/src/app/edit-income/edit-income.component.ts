@@ -35,7 +35,7 @@ export class EditIncomeComponent implements OnInit {
     })
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
     let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
-    this.userId = userDetails.userId;
+    this.userId = userDetails.data.userId;
     this.buildForm();
     this.getAllIncomeCategories();
 

@@ -5,7 +5,7 @@ import { SignUpPayload } from '../models/sign-up-payload';
 import { SignInPayload } from '../models/sign-in-payload';
 import { SignInResponse } from '../models/sign-in-response';
 import { VerifyOtpPayload } from '../models/verify-otp-payload';
-import { environment } from '../../environments/environment.dev';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { ChangePasswordModel } from '../models/change-password-model';
 
@@ -59,7 +59,7 @@ export class AuthService {
       const decoded = atob(userResponse); // Decode Base64 string
       const userDetails: SignInResponse = JSON.parse(decoded); // Parse JSON
   
-      return !!userDetails?.token; // Returns true if token exists
+      return !!userDetails?.data?.token; // Returns true if token exists
     } catch (error) {
       console.error('Error decoding or parsing userResponse:', error);
       return false; // Handle invalid data gracefully
