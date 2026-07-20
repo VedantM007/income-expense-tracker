@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CommonService } from './common.service';
 import { Observable } from 'rxjs';
-import { Category } from '../models/category';
+import { Category, CategoryList } from '../models/category';
 import { environment } from '../../environments/environment';
 import { IncomePayload } from '../models/income-payload';
-import { Expense } from '../models/expense';
+import { Expense, ExpenseList } from '../models/expense';
 import { Income } from '../models/income';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ExpenseService {
 
   constructor(private commonService : CommonService) { }
 
-  getAllExpenseCategories():Observable<Category[]>{
+  getAllExpenseCategories():Observable<CategoryList>{
     return this.commonService.httpGet(`${environment.apiURL}/expense/getAllExpenseCategories`)
   }
 
@@ -22,7 +22,7 @@ export class ExpenseService {
     return this.commonService.httpPostWithAuth(`${environment.apiURL}/expense/addExpense`, payload)
   }
 
-  getAllExpensesByUserId(userId : string):Observable<Expense[]>{
+  getAllExpensesByUserId(userId : string):Observable<ExpenseList>{
     return this.commonService.httpGet(`${environment.apiURL}/expense/getAllExpensesByUserId?userId=${userId}`);
   }
 
@@ -30,11 +30,11 @@ export class ExpenseService {
     return this.commonService.httpDelete(`${environment.apiURL}/expense/deleteExpenseById?id=${id}`);
   }
 
-  getExpenseByExpenseId(expenseId : string):Observable<Income>{
+  getExpenseByExpenseId(expenseId : string):Observable<any>{
     return this.commonService.httpGet(`${environment.apiURL}/expense/getExpenseByExpenseId?_id=${expenseId}`)
   }
 
-  updateExpense(expenseId : string, payload:IncomePayload):Observable<any>{
-    return this.commonService.httpPut(`${environment.apiURL}/expense/updateExpense`, expenseId, payload);
+  updateExpense(payload:IncomePayload):Observable<any>{
+    return this.commonService.httpPostWithAuth(`${environment.apiURL}/expense/updateExpense`, payload);
   }
 }

@@ -7,8 +7,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DashboardStats } from '../models/dashboard-stats';
 import { ToastrService } from 'ngx-toastr';
 import { IncomeService } from '../services/income.service';
-import { Income } from '../models/income';
+import { Income, IncomeList } from '../models/income';
 import { ExpenseService } from '../services/expense.service';
+import { ExpenseList } from '../models/expense';
 
 @Component({
   selector: 'app-dashboard',
@@ -59,8 +60,8 @@ export class DashboardComponent implements OnInit{
 
  getAllIncomesByUserId(){
   this.incomeService.getAllIncomesByUserId(this.userId).subscribe({
-    next : (response)=>{
-      const formattedDates = response.map((item) => {
+    next : (response:IncomeList)=>{
+      const formattedDates = response.data.map((item) => {
         const date = new Date(item.date); // Convert to Date object
         const day = (`0${date.getDate()}`).slice(-2); // Ensures two digits
         const month = (`0${date.getMonth() + 1}`).slice(-2); // Ensures two digits (Months are 0-based)
@@ -68,7 +69,7 @@ export class DashboardComponent implements OnInit{
         return `${day}-${month}-${year}`;
       });
 
-      this.incomeAmountArray = response.map((item) => item.amount)
+      this.incomeAmountArray = response.data.map((item) => item.amount)
        this.incomeDateArray = formattedDates
 
        console.log(formattedDates)
@@ -82,8 +83,8 @@ export class DashboardComponent implements OnInit{
 
  getAllExpensesByUserId(){
   this.expenseService.getAllExpensesByUserId(this.userId).subscribe({
-    next : (response)=>{
-      const formattedDates = response.map((item) => {
+    next : (response:ExpenseList)=>{
+      const formattedDates = response.data.map((item) => {
         const date = new Date(item.date); // Convert to Date object
         const day = (`0${date.getDate()}`).slice(-2); // Ensures two digits
         const month = (`0${date.getMonth() + 1}`).slice(-2); // Ensures two digits (Months are 0-based)
@@ -91,7 +92,7 @@ export class DashboardComponent implements OnInit{
         return `${day}-${month}-${year}`;
       });
 
-      this.expenseAmountArray = response.map((item) => item.amount)
+      this.expenseAmountArray = response.data.map((item) => item.amount)
        this.expenseDateArray = formattedDates
     },
     error : (error : HttpErrorResponse)=>{

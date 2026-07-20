@@ -11,3 +11,9 @@ export interface Expense {
         __v: number
         categoryName : string
 }
+
+export interface ExpenseList{
+    status: number,
+    success: string,
+    data : Expense[]
+}

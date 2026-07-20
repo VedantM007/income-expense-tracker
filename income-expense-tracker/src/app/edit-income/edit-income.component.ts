@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from '../models/category';
+import { Category, CategoryList } from '../models/category';
 import { IncomeService } from '../services/income.service';
 import { first } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -23,7 +23,7 @@ export class EditIncomeComponent implements OnInit {
   incomeId : string = "";
   myForm!:FormGroup;
   isLoading : boolean = false;
-  incomeCategories : Category[] = [];
+  incomeCategories!: CategoryList
   isResponseLoading : boolean = false;
   payload : IncomePayload = {};
   userId : string = "";
@@ -38,7 +38,7 @@ export class EditIncomeComponent implements OnInit {
     this.userId = userDetails.data.userId;
     this.buildForm();
     this.getAllIncomeCategories();
-
+      console.log(this.incomeId)
     if(this.incomeId !== ""){
        this.getIncomeByIncomeId();
     }
@@ -62,7 +62,7 @@ export class EditIncomeComponent implements OnInit {
   }
   getAllIncomeCategories(){
     this.incomeService.getAllIncomeCategories().pipe(first()).subscribe({
-      next : (response : Category[])=>{
+      next : (response : CategoryList)=>{
         this.incomeCategories =response;
       },
       error : (error : HttpErrorResponse)=>{
@@ -74,12 +74,12 @@ export class EditIncomeComponent implements OnInit {
   getIncomeByIncomeId(){
     this.isResponseLoading = true;
     this.incomeService.getIncomeByIncomeId(this.incomeId).pipe(first()).subscribe({
-      next : (response : Income)=>{
-       this.myForm.get('title')?.setValue(response.title);
-       this.myForm.get('amount')?.setValue((response.amount).toString());
-       this.myForm.get('date')?.setValue(new Date(response.date).toISOString().split('T')[0]);
-       this.myForm.get('description')?.setValue(response.description);
-       this.myForm.get('category')?.setValue((response.category).toString());
+      next : (response : any)=>{
+       this.myForm.get('title')?.setValue(response.data.title);
+       this.myForm.get('amount')?.setValue((response.data.amount).toString());
+       this.myForm.get('date')?.setValue(new Date(response.data.date).toISOString().split('T')[0]);
+       this.myForm.get('description')?.setValue(response.data.description);
+       this.myForm.get('category')?.setValue((response.data.category).toString());
        this.isResponseLoading = false;
       },
       error : (error :HttpErrorResponse)=>{
@@ -93,7 +93,7 @@ export class EditIncomeComponent implements OnInit {
     this.isLoading = true;
 
     this.payload = new IncomePayload();
-
+    this.payload.id = this.incomeId;
     this.payload.title = this.myForm.get('title')?.value;
     this.payload.amount = parseInt(this.myForm.get('amount')?.value);
     this.payload.date = new Date(this.myForm.get('date')?.value).toISOString();
@@ -101,7 +101,7 @@ export class EditIncomeComponent implements OnInit {
     this.payload.category = parseInt(this.myForm.get('category')?.value);
     this.payload.userId = this.userId;
 
-      this.incomeService.updateIncome(this.incomeId, this.payload).pipe(first()).subscribe({
+      this.incomeService.updateIncome(this.payload).pipe(first()).subscribe({
         next : (response)=>{
           this.isLoading = false;
           this.toastrService.success('Selected Income updated', 'Success');

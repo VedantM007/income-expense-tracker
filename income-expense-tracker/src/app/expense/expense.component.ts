@@ -4,12 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { ExpenseService } from '../services/expense.service';
 import { first } from 'rxjs';
-import { Category } from '../models/category';
+import { Category, CategoryList } from '../models/category';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { IncomePayload } from '../models/income-payload';
 import { SignInResponse } from '../models/sign-in-response';
-import { Expense } from '../models/expense';
+import { Expense, ExpenseList } from '../models/expense';
 
 @Component({
   selector: 'app-expense',
@@ -23,7 +23,7 @@ export class ExpenseComponent implements OnInit {
   myForm!: FormGroup;
   isLoading : boolean = false;
   pastExpenses : Expense[] = [];
-  expenseCategories : Category[] = [];
+  expenseCategories!: CategoryList
   payload : IncomePayload = {};
   userId : string = '';
   isResponseLoading : boolean = false;
@@ -55,7 +55,7 @@ export class ExpenseComponent implements OnInit {
   }
   getAllExpenseCategories(){
     this.expenseService.getAllExpenseCategories().pipe(first()).subscribe({
-      next : (response : Category[])=>{
+      next : (response : CategoryList)=>{
         this.expenseCategories =response;
       },
       error : (error : HttpErrorResponse)=>{
@@ -66,8 +66,8 @@ export class ExpenseComponent implements OnInit {
   getAllExpensesByUserId(){
     this.isResponseLoading = true;
     this.expenseService.getAllExpensesByUserId(this.userId).pipe(first()).subscribe({
-      next : (response)=>{
-        this.pastExpenses = response
+      next : (response:ExpenseList)=>{
+        this.pastExpenses = response.data
         this.totalExpense = this.pastExpenses.reduce((sum, income) => sum + income.amount, 0);
         this.isResponseLoading = false;
       },

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Category } from '../models/category';
+import { Category, CategoryList } from '../models/category';
 import { IncomePayload } from '../models/income-payload';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '../services/expense.service';
@@ -22,7 +22,7 @@ export class EditExpenseComponent implements OnInit {
   expenseId : string = "";
   myForm!:FormGroup;
   isLoading : boolean = false;
-  expenseCategories : Category[] = [];
+  expenseCategories!: CategoryList
   isResponseLoading : boolean = false;
   payload : IncomePayload = {};
   userId : string = "";
@@ -63,7 +63,7 @@ export class EditExpenseComponent implements OnInit {
 
   getAllExpenseCategories(){
     this.expenseService.getAllExpenseCategories().pipe(first()).subscribe({
-      next : (response : Category[])=>{
+      next : (response : CategoryList)=>{
         this.expenseCategories =response;
       },
       error : (error : HttpErrorResponse)=>{
@@ -75,12 +75,12 @@ export class EditExpenseComponent implements OnInit {
   getexpenseByExpenseId(){
     this.isResponseLoading = true;
     this.expenseService.getExpenseByExpenseId(this.expenseId).pipe(first()).subscribe({
-      next : (response : Income)=>{
-       this.myForm.get('title')?.setValue(response.title);
-       this.myForm.get('amount')?.setValue((response.amount).toString());
-       this.myForm.get('date')?.setValue(new Date(response.date).toISOString().split('T')[0]);
-       this.myForm.get('description')?.setValue(response.description);
-       this.myForm.get('category')?.setValue((response.category).toString());
+      next : (response : any)=>{
+       this.myForm.get('title')?.setValue(response.data.title);
+       this.myForm.get('amount')?.setValue((response.data.amount).toString());
+       this.myForm.get('date')?.setValue(new Date(response.data.date).toISOString().split('T')[0]);
+       this.myForm.get('description')?.setValue(response.data.description);
+       this.myForm.get('category')?.setValue((response.data.category).toString());
        this.isResponseLoading = false;
       },
       error : (error :HttpErrorResponse)=>{
@@ -95,7 +95,7 @@ export class EditExpenseComponent implements OnInit {
     this.isLoading = true;
 
     this.payload = new IncomePayload();
-
+    this.payload.id = this.expenseId
     this.payload.title = this.myForm.get('title')?.value;
     this.payload.amount = parseInt(this.myForm.get('amount')?.value);
     this.payload.date = new Date(this.myForm.get('date')?.value).toISOString();
@@ -103,7 +103,7 @@ export class EditExpenseComponent implements OnInit {
     this.payload.category = parseInt(this.myForm.get('category')?.value);
     this.payload.userId = this.userId;
 
-      this.expenseService.updateExpense(this.expenseId, this.payload).pipe(first()).subscribe({
+      this.expenseService.updateExpense(this.payload).pipe(first()).subscribe({
         next : (response)=>{
           this.isLoading = false;
           this.toastrService.success('Selected Expense updated', 'Success');

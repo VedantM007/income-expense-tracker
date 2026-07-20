@@ -11,3 +11,9 @@ export interface Income {
     __v: number
     categoryName : string
 }
+
+export interface IncomeList{
+    status: number,
+    success: string,
+    data : Income[]
+}

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IncomeService } from '../services/income.service';
-import { Category } from '../models/category';
+import { Category, CategoryList } from '../models/category';
 import { first } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -23,7 +23,7 @@ totalIncome : number = 0
 myForm!: FormGroup;
 isLoading : boolean = false;
 pastIncomes : Income[] = [];
-incomeCategories : Category[] = [];
+incomeCategories!: CategoryList
 payload : IncomePayload = {};
 userId : string = '';
 isResponseLoading : boolean = false;
@@ -56,8 +56,8 @@ buildForm(){
 
 getAllIncomeCategories(){
   this.incomeService.getAllIncomeCategories().pipe(first()).subscribe({
-    next : (response : Category[])=>{
-      this.incomeCategories =response;
+    next : (response : CategoryList)=>{
+      this.incomeCategories = response;
     },
     error : (error : HttpErrorResponse)=>{
        this.toastrService.error(error.error.error, "Error while loading Income Categories");
@@ -69,7 +69,7 @@ getAllIncomesByUserId(){
   this.isResponseLoading = true;
   this.incomeService.getAllIncomesByUserId(this.userId).pipe(first()).subscribe({
     next : (response)=>{
-      this.pastIncomes = response
+      this.pastIncomes = response.data
       this.totalIncome = this.pastIncomes.reduce((sum, income) => sum + income.amount, 0);
       this.isResponseLoading = false;
     },
