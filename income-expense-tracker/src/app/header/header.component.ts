@@ -4,11 +4,12 @@ import { SignInResponse } from '../models/sign-in-response';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ThemeToggleComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

@@ -1,40 +1,55 @@
-<header class="flex items-center justify-between bg-white text-black px-4 py-2 shadow-xl">
+<header class="flex items-center justify-between px-6 py-3 border-b border-slate-200/40 dark:border-slate-800/40 bg-white/20 dark:bg-slate-950/20 backdrop-blur-md text-slate-800 dark:text-slate-200 shadow-none sticky z-20">
   <!-- Sidebar Toggle Button (visible on xs and larger screens) -->
   <button
-    class="p-2 mr-4 text-black rounded-lg focus:outline-none"
+    class="p-2 text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl focus:outline-none transition-all duration-200"
     aria-label="Toggle Sidebar"
     (click)="toggleSidebar()"
   >
     <!-- Hamburger Icon for Sidebar Toggle -->
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
     </svg>
   </button>
 
-  <!-- Profile Section -->
-  <div class="flex space-x-4 p-4 xs:flex-col xs:items-center xs:space-x-0">
-    <div class="xs:mt-2 flex">
-      <div class="relative inline-block">
-        <button
-          (click)="toggleDropdown()"
-          class="flex"
-        >
+  <!-- Control & Profile Section -->
+  <div class="flex items-center gap-6">
+    <!-- Theme Toggle -->
+    <app-theme-toggle></app-theme-toggle>
+
+    <!-- Profile Dropdown Trigger -->
+    <div class="relative">
+      <button
+        (click)="toggleDropdown()"
+        class="flex items-center text-left hover:opacity-90 focus:outline-none group transition-opacity"
+      >
         <img
-        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-        alt="Profile"
-        class="w-12 h-12 rounded-full"/>
-        <div class="pl-2">
-        <div class="text-base text-left font-light xs:text-sm">{{firstName}} {{lastName}}</div>
-        <div class="text-base font-light xs:text-sm">{{email}}</div>
-      </div>
-        </button>
-        <div
-          *ngIf="isOpen"
-          class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded-md shadow-lg z-10"
-        >
-        <a (click)="navigateToChangePassword()" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">Change Password</a>
-          <a (click)="logout()" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">Logout</a>
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="Profile"
+          class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800"
+        />
+        <div class="pl-2.5 hidden sm:block">
+          <div class="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight group-hover:text-primary-color transition-colors">{{firstName}} {{lastName}}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-light leading-none mt-0.5">{{email}}</div>
         </div>
+      </button>
+
+      <!-- Glass Dropdown Menu -->
+      <div
+        *ngIf="isOpen"
+        class="absolute right-0 mt-2 w-52 glass-card bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl z-50 overflow-hidden py-1 animate-fade-in"
+      >
+        <a 
+          (click)="navigateToChangePassword()" 
+          class="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
+        >
+          Change Password
+        </a>
+        <a 
+          (click)="logout()" 
+          class="block px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 cursor-pointer transition-colors border-t border-slate-200/30 dark:border-slate-800/30"
+        >
+          Logout
+        </a>
       </div>
     </div>
   </div>

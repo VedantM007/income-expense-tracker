@@ -1,7 +1,9 @@
-.logo{
-    background: linear-gradient(90deg, #020024, #090979, #00d4ff, #23d5ab);
+.logo {
+  background: transparent;
 }
 
-.active{
-    background : #1A9BFE
+.active {
+  background: var(--sidebar-active-bg) !important;
+  color: var(--sidebar-active-text) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
 }

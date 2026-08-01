@@ -1,324 +1,226 @@
-<div class="bg-white p-4">
-@if (isResponseLoading == true) {
-  <div class="flex justify-center h-screen">
-    <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
+<div>
+  @if (isResponseLoading == true) {
+    <div class="flex flex-col items-center justify-center min-h-[60vh]">
+      <div class="w-12 h-12 border-4 border-slate-200/50 dark:border-slate-800/50 border-t-primary-color rounded-full animate-spin"></div>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-4">Loading incomes...</p>
     </div>
+  }
+  @else {
+    <!-- Total Income Summary -->
+    <div class="glass-card p-6 flex items-center justify-between mb-6">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Income</p>
+        <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-450 mt-1">&#8377;{{ totalIncome }}</h3>
+      </div>
+      <div class="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-450 rounded-xl">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+        </svg>
+      </div>
     </div>
-}
-@else {
-    <div
-      class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
-    >
-      Total Income: <span class="text-green-600">&#8377;{{ totalIncome }}</span>
-    </div>
-    <div class="flex">
-      <div class="w-2/5 pt-6">
-        <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-          Post New Income
-        </div>
-        <div class="border border-t-0 border-gray-200 min-h-[400px] p-4">
-          <form [formGroup]="myForm" (ngSubmit)="onSave()">
-            <div class="my-2">
+
+    <!-- Responsive Columns -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      
+      <!-- Post New Income Column -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="glass-card p-6">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-5">Post New Income</h3>
+          
+          <form [formGroup]="myForm" (ngSubmit)="onSave()" class="space-y-4">
+            <!-- Title -->
+            <div>
               <input
                 id="title"
                 type="text"
                 formControlName="title"
-                placeholder="Enter title"
+                placeholder="Title"
                 [ngClass]="{
-                  'border-red-500':
-                    myForm.get('title')?.invalid && myForm.get('title')?.touched
+                  'border-red-500 focus:ring-red-500/20': myForm.get('title')?.invalid && myForm.get('title')?.touched
                 }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+                class="w-full px-4 py-2.5 glass-input text-sm"
               />
-              <div *ngIf="myForm.get('title')?.touched">
-                <small
-                  *ngIf="myForm.get('title')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title is required.
-                </small>
-                <small
-                  *ngIf="myForm.get('title')?.hasError('maxlength')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title can't be more than 20 characters
-                </small>
+              <div *ngIf="myForm.get('title')?.touched" class="mt-1.5 pl-1">
+                <small *ngIf="myForm.get('title')?.hasError('required')" class="text-red-500 text-xs">Title is required.</small>
+                <small *ngIf="myForm.get('title')?.hasError('maxlength')" class="text-red-500 text-xs">Title can't exceed 20 characters.</small>
               </div>
             </div>
   
-            <div class="my-6">
+            <!-- Amount -->
+            <div>
               <input
                 id="amount"
                 type="text"
                 formControlName="amount"
-                placeholder="Enter amount"
+                placeholder="Amount"
                 [ngClass]="{
-                  'border-red-500':
-                    myForm.get('amount')?.invalid && myForm.get('amount')?.touched
+                  'border-red-500 focus:ring-red-500/20': myForm.get('amount')?.invalid && myForm.get('amount')?.touched
                 }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+                class="w-full px-4 py-2.5 glass-input text-sm"
                 (keypress)="allowNumbersOnly($event)"
               />
-              <div *ngIf="myForm.get('amount')?.touched">
-                <small
-                  *ngIf="myForm.get('amount')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Amount is required.
-                </small>
-                <small
-                  *ngIf="myForm.get('amount')?.hasError('minlength')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Income less than &#8377;1,000 is not allowed
-                </small>
+              <div *ngIf="myForm.get('amount')?.touched" class="mt-1.5 pl-1">
+                <small *ngIf="myForm.get('amount')?.hasError('required')" class="text-red-500 text-xs">Amount is required.</small>
+                <small *ngIf="myForm.get('amount')?.hasError('minlength')" class="text-red-500 text-xs">Income less than &#8377;1,000 is not allowed.</small>
               </div>
             </div>
   
-            <div class="my-6">
+            <!-- Date -->
+            <div>
               <input
                 id="date"
                 type="date"
                 formControlName="date"
-                placeholder="Enter date"
                 [ngClass]="{
-                  'border-red-500':
-                    myForm.get('date')?.invalid && myForm.get('date')?.touched
+                  'border-red-500 focus:ring-red-500/20': myForm.get('date')?.invalid && myForm.get('date')?.touched
                 }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
+                class="w-full px-4 py-2.5 glass-input text-sm custom-placeholder"
               />
-              <div *ngIf="myForm.get('date')?.touched">
-                <small
-                  *ngIf="myForm.get('date')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Date is required.
-                </small>
+              <div *ngIf="myForm.get('date')?.touched" class="mt-1.5 pl-1">
+                <small *ngIf="myForm.get('date')?.hasError('required')" class="text-red-500 text-xs">Date is required.</small>
               </div>
             </div>
   
-            <div class="my-6">
+            <!-- Description -->
+            <div>
               <textarea
                 id="description"
                 formControlName="description"
-                placeholder="Enter description"
+                placeholder="Description"
                 maxlength="250"
+                rows="3"
                 [ngClass]="{
-                  'border-red-500':
-                    myForm.get('description')?.invalid &&
-                    myForm.get('description')?.touched
+                  'border-red-500 focus:ring-red-500/20': myForm.get('description')?.invalid && myForm.get('description')?.touched
                 }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
-              >
-              </textarea>
-              <div *ngIf="myForm.get('description')?.touched">
-                <small
-                  *ngIf="myForm.get('description')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Description is required.
-                </small>
+                class="w-full px-4 py-2.5 glass-input text-sm"
+              ></textarea>
+              <div *ngIf="myForm.get('description')?.touched" class="mt-1.5 pl-1">
+                <small *ngIf="myForm.get('description')?.hasError('required')" class="text-red-500 text-xs">Description is required.</small>
               </div>
             </div>
-            <div class="my-6">
+
+            <!-- Category -->
+            <div>
               <select
                 id="category"
                 formControlName="category"
                 [ngClass]="{
-                  'border-red-500':
-                    myForm.get('category')?.invalid &&
-                    myForm.get('category')?.touched
+                  'border-red-500 focus:ring-red-500/20': myForm.get('category')?.invalid && myForm.get('category')?.touched
                 }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
+                class="w-full px-4 py-2.5 glass-input text-sm bg-transparent cursor-pointer"
               >
                 <option value="">Select the category</option>
                 @for (incomeCategory of incomeCategories.data; track $index) {
-                  <option [value]="incomeCategory.id">{{incomeCategory.value}}</option>
+                  <option [value]="incomeCategory.id" class="dark:bg-slate-900">{{incomeCategory.value}}</option>
                 }
               </select>
-              <div *ngIf="myForm.get('category')?.touched">
-                <small
-                  *ngIf="myForm.get('category')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Category is required.
-                </small>
+              <div *ngIf="myForm.get('category')?.touched" class="mt-1.5 pl-1">
+                <small *ngIf="myForm.get('category')?.hasError('required')" class="text-red-500 text-xs">Category is required.</small>
               </div>
             </div>
-            <div class="flex justify-between items-center mt-8 xs:mt-8">
-              <button
-                type="submit"
-                [disabled]="myForm.invalid || isLoading"
-                class="px-14 py-2 w-full bg-blue-500 text-sm text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#D2D2D2] disabled:shadow-none disabled:border disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 xs:px-10 xs:py-1 xs:text-sm"
-              >
-                <span
-                  *ngIf="isLoading"
-                  class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
-                ></span>
-                Post Income
-              </button>
-            </div>
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              [disabled]="myForm.invalid || isLoading"
+              class="w-full py-3 btn-primary text-sm flex items-center justify-center gap-2 mt-2"
+            >
+              <span *ngIf="isLoading" class="w-4 h-4 border-2 border-transparent border-t-white rounded-full animate-spin"></span>
+              Post Income
+            </button>
           </form>
         </div>
       </div>
-      <div class="w-3/5 py-6 pl-6">
-        <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-          Past Incomes
-        </div>
-        @if(pastIncomes.length == 0){
-          <div class="flex justify-center p-10 text-gray-500">
-           No Past Income found
-          </div>
-         }
-         @else{
-        @for (pastIncome of pastIncomes; track $index) {
-          <div
-          class="border border-t-0 border-gray-200 p-8 flex justify-between hover:border-none hover:shadow-custom transition-all duration-300"
-        >
-          <div></div>
-          <div class="flex">
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="size-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <span> {{pastIncome.title}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 8.25H9m6 3H9m3 6-3-3h1.5a3 3 0 1 0 0-6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastIncome.amount}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastIncome.date | date : 'dd/MM/yyyy'}} </span>
-            &nbsp;&nbsp;
-            <span> - </span>
-            &nbsp;&nbsp;
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                />
-              </svg>
-            </span>
-            <span> {{pastIncome.categoryName}} </span>
-          </div>
-          <div>
-            <span>
-              <button (click)="navigateToEditIncome(pastIncome._id)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="blue"
-                  class="size-6"
-                >
-                  <path
-                    d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"
-                  />
-                  <path
-                    d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"
-                  />
-                </svg></button
-            ></span>
-            <span class="pl-2">
-              <button (click)="openModal(pastIncome._id)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="red"
-                  class="size-6"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                    clip-rule="evenodd"
-                  />
+
+      <!-- Past Incomes Column -->
+      <div class="lg:col-span-3 space-y-6">
+        <div class="glass-card p-6 flex flex-col h-full">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-5">Past Incomes</h3>
+          
+          <div class="space-y-4 flex-grow">
+            @if(pastIncomes.length == 0){
+              <div class="flex flex-col items-center justify-center py-16 text-slate-400 dark:text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-3 opacity-55">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
-              </button>
-            </span>
+                <p class="text-sm">No Past Income found</p>
+              </div>
+            }
+            @else {
+              @for (pastIncome of pastIncomes; track $index) {
+                <div class="p-4 rounded-xl border border-slate-200/40 dark:border-slate-800/40 bg-white/20 dark:bg-white/5 flex items-center justify-between hover:bg-slate-200/30 dark:hover:bg-slate-800/20 transition-all duration-200">
+                  <div class="flex items-center gap-4">
+                    <span class="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-450 rounded-xl">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                    </span>
+                    <div>
+                      <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{pastIncome.title}}</h4>
+                      <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-slate-500 dark:text-slate-400 items-center">
+                        <span class="font-semibold text-emerald-600 dark:text-emerald-450">&#8377;{{pastIncome.amount}}</span>
+                        <span>•</span>
+                        <span>{{pastIncome.date | date : 'dd/MM/yyyy'}}</span>
+                        <span>•</span>
+                        <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-medium">{{pastIncome.categoryName}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-1.5">
+                    <button (click)="navigateToEditIncome(pastIncome._id)" class="p-2 text-blue-600 hover:bg-blue-500/10 rounded-lg transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 20.613a4.5 4.5 0 0 1-1.667 1.019l-3.007 1.004 1.004-3.007a4.5 4.5 0 0 1 1.02-1.667L16.862 4.487Zm0 0L19.5 7.125" />
+                      </svg>
+                    </button>
+                    <button (click)="openModal(pastIncome._id)" class="p-2 text-rose-600 hover:bg-rose-500/10 rounded-lg transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              }
+            }
           </div>
         </div>
-        }
-      }
       </div>
+
     </div>
-}
+  }
 </div>
 
-
-
 <!-- Delete Confirmation Modal -->
-<div *ngIf="showModal" class="fixed inset-0 z-10 bg-gray-500/75 transition-opacity duration-300 ease-out"
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300 ease-out"
      [class.opacity-100]="isOpen" [class.opacity-0]="!isOpen"
      (click)="closeModal()">
   
   <!-- Modal Wrapper -->
-  <div class="fixed top-10 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-out"
-       [class.opacity-100]="isOpen" [class.translate-y-0]="isOpen"
-       [class.opacity-0]="!isOpen" [class.-translate-y-10]="!isOpen"
+  <div class="w-full max-w-md glass-modal p-6 transition-all duration-300 ease-out"
+       [class.scale-100]="isOpen" [class.opacity-100]="isOpen"
+       [class.scale-95]="!isOpen" [class.opacity-0]="!isOpen"
        (click)="$event.stopPropagation()">
     
     <!-- Modal Content -->
-    <div class="bg-white shadow-xl min-w-[30rem] p-6">
-      <div class="flex items-center">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Do you want to delete the selected income?</h3>
+    <div class="flex flex-col">
+      <div class="flex items-center gap-3.5 mb-4 text-rose-600 dark:text-rose-450">
+        <span class="p-2.5 bg-rose-500/10 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3Z" />
+          </svg>
+        </span>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Delete Income</h3>
       </div>
-      <div class="mt-4 flex justify-end space-x-2">
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" (click)="deleteIncomeById()">Yes</button>
-        <button class="bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300" (click)="closeModal()">No</button>
+      
+      <p class="text-sm text-black dark:text-slate-400">
+        Are you sure you want to delete this income record? This action cannot be undone.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-xl transition" (click)="closeModal()">Cancel</button>
+        <button class="px-4 py-2 text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md transition" (click)="deleteIncomeById()">Delete</button>
       </div>
     </div>
-
   </div>
 </div>
 

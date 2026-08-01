@@ -1,156 +1,132 @@
-<div class="bg-white p-4 flex">
-    <div class="w-1/6"></div>
-    <div class="justify-center w-4/6">
-      <div class="bg-[#FBFBFB] p-5 text-center w-full border border-gray-200">
-        Update Expense
-      </div>
-      <div class="border border-t-0 border-gray-200 min-h-[400px] p-4">
-        @if (isResponseLoading == true) {
-            <div class="flex justify-center">
-              <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
-              </div>
-              </div>
-          }
-          @else{
-        <form [formGroup]="myForm" (ngSubmit)="onSave()">
-            <div class="my-2">
-              <input
-                id="title"
-                type="text"
-                formControlName="title"
-                placeholder="Enter title"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('title')?.invalid && myForm.get('title')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-              />
-              <div *ngIf="myForm.get('title')?.touched">
-                <small
-                  *ngIf="myForm.get('title')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title is required.
-                </small>
-                <small
-                  *ngIf="myForm.get('title')?.hasError('maxlength')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Title can't be more than 20 characters
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <input
-                id="amount"
-                type="text"
-                formControlName="amount"
-                placeholder="Enter amount"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('amount')?.invalid && myForm.get('amount')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-                (keypress)="allowNumbersOnly($event)"
-              />
-              <div *ngIf="myForm.get('amount')?.touched">
-                <small
-                  *ngIf="myForm.get('amount')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Amount is required.
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <input
-                id="date"
-                type="date"
-                formControlName="date"
-                placeholder="Enter date"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('date')?.invalid && myForm.get('date')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
-              />
-              <div *ngIf="myForm.get('date')?.touched">
-                <small
-                  *ngIf="myForm.get('date')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Date is required.
-                </small>
-              </div>
-            </div>
-  
-            <div class="my-6">
-              <textarea
-                id="description"
-                formControlName="description"
-                placeholder="Enter description"
-                maxlength="250"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('description')?.invalid &&
-                    myForm.get('description')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm custom-placeholder"
-              >
-              </textarea>
-              <div *ngIf="myForm.get('description')?.touched">
-                <small
-                  *ngIf="myForm.get('description')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Description is required.
-                </small>
-              </div>
-            </div>
-            <div class="my-6">
-              <select
-                id="category"
-                formControlName="category"
-                [ngClass]="{
-                  'border-red-500':
-                    myForm.get('category')?.invalid &&
-                    myForm.get('category')?.touched
-                }"
-                class="w-full px-4 py-2 border focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent xs:text-sm"
-              >
-                <option value="">Select the category</option>
-                @for (expenseCategory of expenseCategories.data; track $index) {
-                  <option [value]="expenseCategory.id">{{expenseCategory.value}}</option>
-                }
-              </select>
-              <div *ngIf="myForm.get('category')?.touched">
-                <small
-                  *ngIf="myForm.get('category')?.hasError('required')"
-                  class="text-red-500 xs:text-sm"
-                >
-                  Category is required.
-                </small>
-              </div>
-            </div>
-            <div class="flex justify-between items-center mt-8 xs:mt-8">
-              <button
-                type="submit"
-                [disabled]="myForm.invalid || isLoading"
-                class="px-14 py-2 w-full bg-blue-500 text-sm text-white font-semibold shadow-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-[#D2D2D2] disabled:shadow-none disabled:border disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 xs:px-10 xs:py-1 xs:text-sm"
-              >
-                <span
-                  *ngIf="isLoading"
-                  class="w-4 h-4 border-2 border-transparent border-t-black rounded-full animate-spin"
-                ></span>
-                Update Expense
-              </button>
-            </div>
-          </form>
-        }
-      </div>
+<div class="max-w-2xl mx-auto w-full p-4">
+  <div class="glass-card p-6 md:p-8">
+    <!-- Header -->
+    <div class="flex items-center gap-3.5 mb-6 text-rose-600 dark:text-rose-455">
+      <span class="p-2.5 bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-455 rounded-xl">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 20.613a4.5 4.5 0 0 1-1.667 1.019l-3.007 1.004 1.004-3.007a4.5 4.5 0 0 1 1.02-1.667L16.862 4.487Zm0 0L19.5 7.125" />
+        </svg>
+      </span>
+      <h3 class="text-xl font-bold text-slate-800 dark:text-slate-200">Update Expense</h3>
     </div>
-    <div class="w-1/6"></div>
+
+    @if (isResponseLoading == true) {
+      <div class="flex flex-col items-center justify-center py-16">
+        <div class="w-12 h-12 border-4 border-slate-200/50 dark:border-slate-800/50 border-t-primary-color rounded-full animate-spin"></div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-4">Loading expense details...</p>
+      </div>
+    }
+    @else {
+      <form [formGroup]="myForm" (ngSubmit)="onSave()" class="space-y-5">
+        <!-- Title -->
+        <div>
+          <label for="title" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Title</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="Title"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-500/20': myForm.get('title')?.invalid && myForm.get('title')?.touched
+            }"
+            class="w-full px-4 py-2.5 glass-input text-sm"
+          />
+          <div *ngIf="myForm.get('title')?.touched" class="mt-1.5 pl-1">
+            <small *ngIf="myForm.get('title')?.hasError('required')" class="text-red-500 text-xs">Title is required.</small>
+            <small *ngIf="myForm.get('title')?.hasError('maxlength')" class="text-red-500 text-xs">Title can't exceed 20 characters.</small>
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div>
+          <label for="amount" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Amount (&#8377;)</label>
+          <input
+            id="amount"
+            type="text"
+            formControlName="amount"
+            placeholder="Amount"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-500/20': myForm.get('amount')?.invalid && myForm.get('amount')?.touched
+            }"
+            class="w-full px-4 py-2.5 glass-input text-sm"
+            (keypress)="allowNumbersOnly($event)"
+          />
+          <div *ngIf="myForm.get('amount')?.touched" class="mt-1.5 pl-1">
+            <small *ngIf="myForm.get('amount')?.hasError('required')" class="text-red-500 text-xs">Amount is required.</small>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div>
+          <label for="date" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Date</label>
+          <input
+            id="date"
+            type="date"
+            formControlName="date"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-500/20': myForm.get('date')?.invalid && myForm.get('date')?.touched
+            }"
+            class="w-full px-4 py-2.5 glass-input text-sm custom-placeholder"
+          />
+          <div *ngIf="myForm.get('date')?.touched" class="mt-1.5 pl-1">
+            <small *ngIf="myForm.get('date')?.hasError('required')" class="text-red-500 text-xs">Date is required.</small>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Description</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            placeholder="Description"
+            maxlength="250"
+            rows="3"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-500/20': myForm.get('description')?.invalid && myForm.get('description')?.touched
+            }"
+            class="w-full px-4 py-2.5 glass-input text-sm"
+          ></textarea>
+          <div *ngIf="myForm.get('description')?.touched" class="mt-1.5 pl-1">
+            <small *ngIf="myForm.get('description')?.hasError('required')" class="text-red-500 text-xs">Description is required.</small>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label for="category" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Category</label>
+          <select
+            id="category"
+            formControlName="category"
+            [ngClass]="{
+              'border-red-500 focus:ring-red-500/20': myForm.get('category')?.invalid && myForm.get('category')?.touched
+            }"
+            class="w-full px-4 py-2.5 glass-input text-sm bg-transparent cursor-pointer"
+          >
+            <option value="" class="dark:bg-slate-900">Select the category</option>
+            @for (expenseCategory of expenseCategories.data; track $index) {
+              <option [value]="expenseCategory.id" class="dark:bg-slate-900">{{expenseCategory.value}}</option>
+            }
+          </select>
+          <div *ngIf="myForm.get('category')?.touched" class="mt-1.5 pl-1">
+            <small *ngIf="myForm.get('category')?.hasError('required')" class="text-red-500 text-xs">Category is required.</small>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-4 pt-4">
+
+          <button
+            type="submit"
+            [disabled]="myForm.invalid || isLoading"
+            class="flex-1 py-3 btn-primary text-sm flex items-center justify-center gap-2"
+          >
+            <span *ngIf="isLoading" class="w-4 h-4 border-2 border-transparent border-t-white rounded-full animate-spin"></span>
+            Update Expense
+          </button>
+        </div>
+      </form>
+    }
+  </div>
 </div>
 

@@ -1,123 +1,185 @@
-<div class="bg-white p-4">
+<div class="space-y-6">
   @if (isResponseLoading == true) {
-    <div class="flex justify-center h-screen">
-      <div class="w-12 h-12 border-[5px] border-transparent border-t-black border-l-black border-r-black rounded-full animate-spin">
-      </div>
-      </div>
+    <div class="flex flex-col items-center justify-center min-h-[60vh]">
+      <div class="w-12 h-12 border-4 border-slate-200/50 dark:border-slate-800/50 border-t-primary-color rounded-full animate-spin"></div>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-4">Loading dashboard data...</p>
+    </div>
   }
-  @else{
-  <div class="flex">
-    <div
-      class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300"
-    >
-      Balance: <span class="text-violet-600">&#8377;{{ dashboardStats?.data?.balance }}</span>
-    </div>
-    <div
-      class="w-full h-full p-7 border border-r-0 border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
-    >
-      Total Income: <span class="text-green-600">&#8377;{{ dashboardStats?.data?.totalIncome }}</span>
-    </div>
-    <div
-      class="w-full h-full p-7 border border-gray-200 text-center hover:border-none hover:shadow-custom transition-all duration-300 "
-    >
-      Total Expense: <span class="text-red-600">&#8377;{{ dashboardStats?.data?.totalExpense }}</span>
-    </div>
-  </div>
+  @else {
+    <!-- KPI Summary Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Balance Card -->
+      <div class="glass-card p-6 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Net Balance</p>
+          <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-200 mt-1">&#8377;{{ dashboardStats?.data?.balance }}</h3>
+        </div>
+        <div class="p-3 bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 10h1a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3H9m3-7V7m0 10v-2m-3-1h1.5a3 3 0 1 0 0-6M12 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+        </div>
+      </div>
 
-  <div class="flex">
-    <div class="w-2/3 pt-8">
-      <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-        Income Chart
-      </div>
-      <div class="border border-t-0 border-gray-200">
-        <div class="flex justify-center">
-          <div class="border border-green-800 bg-[#4fa56f] h-5 w-10 m-5"></div>
-          <div class="pt-[1.1rem]">Income</div>
+      <!-- Income Card -->
+      <div class="glass-card p-6 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Income</p>
+          <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">&#8377;{{ dashboardStats?.data?.totalIncome }}</h3>
         </div>
-       @if (incomeDateArray?.length == 0 && incomeAmountArray?.length == 0) {
-         <div class="flex justify-center p-6 h-[500px] text-gray-400">
-          Income Data not availabile
-         </div>
-       }
-       @else {
-        <div id="income-chart" class="h-[500px]"></div>
-       }
-      </div>
-    </div>
-    <div class="w-1/3 pt-8 ml-3">
-      <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-        Recent History
-      </div>
-      @if (dashboardStats?.data?.recentHistory?.income == null) {
-        <div class="text-center p-6 border border-gray-200 text-gray-400">
-          No Recent Income History
+        <div class="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+          </svg>
         </div>
-      }
-      @else {
-        <div
-        class="border border-gray-200 text-center p-6 border-t-0 text-green-500 font-light hover:border-none hover:shadow-new transition-all duration-300"
-      >
-        + &#8377; {{ dashboardStats?.data?.recentHistory?.income?.amount}} {{dashboardStats?.data?.recentHistory?.income?.title}}
       </div>
-      }
 
-     @if (dashboardStats?.data?.recentHistory?.expense == null) {
-      <div class="text-center p-6 border border-gray-200 text-gray-400">
-        No Recent Expense History
-      </div>
-     }
-     @else {
-      <div
-      class="border border-gray-200 text-center p-6 border-t-0 text-red-500 font-light
-      hover:border-none hover:shadow-new transition-all duration-300 "
-    >
-      -  &#8377; {{ dashboardStats?.data?.recentHistory?.expense?.amount}} {{dashboardStats?.data?.recentHistory?.expense?.title}}
-    </div>  
-     }
-<div class="mt-10">
-  <div
-  class="border border-gray-200 border-t-0 text-center p-4 bg-gray-100"
->
-  Income
-</div>
-<div
-  class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
->
-  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.data?.minIncome}}</div>
-  &nbsp;<div class="w-1/2">Maximum: &#8377; {{dashboardStats?.data?.maxIncome}}</div>
-</div>
-<div
-  class="border border-gray-200 text-center border-t-0 p-4 bg-gray-100"
->
-  Expense
-</div>
-<div
-  class="flex border border-gray-200 border-t-0 text-center p-4 font-light"
->
-  <div class="w-1/2 border-r-2 border-black">Minimum: &#8377; {{dashboardStats?.data?.minExpense}}</div>
-  <div class="w-1/2">Maximum: &#8377; {{dashboardStats?.data?.maxExpense}}</div>
-</div>
-</div>
-    </div>
-  </div>
-  <div class="pt-8">
-    <div class="border border-gray-200 text-center p-4 bg-[#FBFBFB]">
-      Expense Chart
-    </div>
-    <div class="border border-t-0 border-gray-200">
-      <div class="flex justify-center">
-        <div class="border border-red-800 bg-red-600 h-5 w-10 m-5"></div>
-        <div class="pt-[1.1rem]">Expense</div>
-      </div>
-      @if (expenseDateArray?.length == 0 && expenseAmountArray?.length == 0) {
-        <div class="flex justify-center p-6 h-[500px] text-gray-400">
-         Expense Data not availabile
+      <!-- Expense Card -->
+      <div class="glass-card p-6 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Expense</p>
+          <h3 class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">&#8377;{{ dashboardStats?.data?.totalExpense }}</h3>
         </div>
-      }
-      @else {
-        <div id="expense-chart" class="h-[500px]"></div>
-      }
+        <div class="p-3 bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+          </svg>
+        </div>
+      </div>
+
     </div>
-  </div>
-}
+
+    <!-- Main Charts & History Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Income Chart Card -->
+      <div class="glass-card p-6 lg:col-span-2 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Income Stream</h3>
+          <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+            Income
+          </div>
+        </div>
+        
+        <div class="flex-grow min-h-[400px] flex items-center justify-center">
+          @if (incomeDateArray?.length == 0 && incomeAmountArray?.length == 0) {
+            <div class="text-slate-400 dark:text-slate-500 text-sm">Income Data not available</div>
+          }
+          @else {
+            <div id="income-chart" class="w-full h-[400px]"></div>
+          }
+        </div>
+      </div>
+
+      <!-- Recent History Card -->
+      <div class="glass-card p-6 flex flex-col">
+        <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Recent History</h3>
+        
+        <div class="space-y-4 flex-grow">
+          <!-- Recent Income -->
+          @if (dashboardStats?.data?.recentHistory?.income == null) {
+            <div class="p-4 rounded-2xl border border-slate-200/40 dark:border-slate-800/40 text-center text-xs text-slate-400 dark:text-slate-500">
+              No Recent Income History
+            </div>
+          }
+          @else {
+            <div class="p-4 rounded-2xl border border-slate-200/40 dark:border-slate-800/40 bg-emerald-500/5 dark:bg-emerald-500/10 flex items-center justify-between transition hover:bg-emerald-500/10">
+              <div class="flex items-center gap-3">
+                <span class="p-2 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </span>
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-350">{{dashboardStats?.data?.recentHistory?.income?.title}}</span>
+              </div>
+              <span class="text-sm font-semibold text-emerald-650 dark:text-emerald-450">+&#8377;{{ dashboardStats?.data?.recentHistory?.income?.amount}}</span>
+            </div>
+          }
+
+          <!-- Recent Expense -->
+          @if (dashboardStats?.data?.recentHistory?.expense == null) {
+            <div class="p-4 rounded-2xl border border-slate-200/40 dark:border-slate-800/40 text-center text-xs text-slate-400 dark:text-slate-500">
+              No Recent Expense History
+            </div>
+          }
+          @else {
+            <div class="p-4 rounded-2xl border border-slate-200/40 dark:border-slate-800/40 bg-rose-500/5 dark:bg-rose-500/10 flex items-center justify-between transition hover:bg-rose-500/10">
+              <div class="flex items-center gap-3">
+                <span class="p-2 bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                  </svg>
+                </span>
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-350">{{dashboardStats?.data?.recentHistory?.expense?.title}}</span>
+              </div>
+              <span class="text-sm font-semibold text-rose-650 dark:text-rose-450">-&#8377;{{ dashboardStats?.data?.recentHistory?.expense?.amount}}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Mini Stats Summary -->
+        <div class="border-t border-slate-200/30 dark:border-slate-800/30 pt-5 mt-6 space-y-4">
+          <!-- Income Overview -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Income Overview</p>
+              <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-2.5 rounded-xl bg-white/20 dark:bg-white/5 border border-slate-200/40 dark:border-slate-800/40 text-center">
+                <span class="text-[10px] uppercase font-medium text-slate-400 dark:text-slate-500 block mb-0.5">Min</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">&#8377;{{dashboardStats?.data?.minIncome}}</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/20 dark:bg-white/5 border border-slate-200/40 dark:border-slate-800/40 text-center">
+                <span class="text-[10px] uppercase font-medium text-slate-400 dark:text-slate-500 block mb-0.5">Max</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">&#8377;{{dashboardStats?.data?.maxIncome}}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Expense Overview -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Expense Overview</p>
+              <span class="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-2.5 rounded-xl bg-white/20 dark:bg-white/5 border border-slate-200/40 dark:border-slate-800/40 text-center">
+                <span class="text-[10px] uppercase font-medium text-slate-400 dark:text-slate-500 block mb-0.5">Min</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">&#8377;{{dashboardStats?.data?.minExpense}}</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/20 dark:bg-white/5 border border-slate-200/40 dark:border-slate-800/40 text-center">
+                <span class="text-[10px] uppercase font-medium text-slate-400 dark:text-slate-500 block mb-0.5">Max</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">&#8377;{{dashboardStats?.data?.maxExpense}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Expense Chart Card -->
+    <div class="glass-card p-6 mt-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Expense Stream</h3>
+        <div class="flex items-center gap-2 text-xs text-rose-600 dark:text-rose-400 font-medium">
+          <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
+          Expense
+        </div>
+      </div>
+      
+      <div class="min-h-[400px] flex items-center justify-center">
+        @if (expenseDateArray?.length == 0 && expenseAmountArray?.length == 0) {
+          <div class="text-slate-400 dark:text-slate-500 text-sm">Expense Data not available</div>
+        }
+        @else {
+          <div id="expense-chart" class="w-full h-[400px]"></div>
+        }
+      </div>
+    </div>
+  }
 </div>

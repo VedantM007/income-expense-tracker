@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "./header/header.component";
 import { Subscription } from 'rxjs';
 import { SidebarService } from './sidebar/sidebar.service';
+import { ThemeToggleComponent } from "./theme-toggle/theme-toggle.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, CommonModule, HeaderComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule, HeaderComponent, ThemeToggleComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -45,6 +46,10 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isSidebarOpen = isOpen;
     });
   }
+  toggleSidebar(): void {
+    this.sidebarService.toggleSidebar();
+  }
+
   ngOnDestroy() {
     // Clean up the subscription to avoid memory leaks
     if (this.sidebarSubscription) {

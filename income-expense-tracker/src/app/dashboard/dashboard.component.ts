@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import * as echarts from 'echarts';
 import { DashboardService } from '../services/dashboard.service';
 import { SignInResponse } from '../models/sign-in-response';
@@ -18,7 +18,10 @@ import { ExpenseList } from '../models/expense';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit, OnDestroy {
+
+  private incomeChartInstance?: echarts.ECharts;
+  private expenseChartInstance?: echarts.ECharts;
 
   balance : number = 0;
   totalExpense : number = 0;
@@ -103,7 +106,11 @@ export class DashboardComponent implements OnInit{
 
   incomeChart(): void {
     const chartDom = document.getElementById('income-chart')!;
+    if (this.incomeChartInstance) {
+      this.incomeChartInstance.dispose();
+    }
     const myChart = echarts.init(chartDom);
+    this.incomeChartInstance = myChart;
 
     // X-axis and Y-axis fixed values
     const xAxisLabels = this.incomeDateArray;
@@ -111,23 +118,35 @@ export class DashboardComponent implements OnInit{
     const yAxisValues = this.incomeAmountArray;
 
     const option = {
+      grid: {
+        top: 20,
+        bottom: 40,
+        left: 50,
+        right: 20
+      },
       xAxis: {
         type: 'category',
         data: xAxisLabels, // Fixed dates as X-axis labels
         boundaryGap: false, // Align labels directly on points
         splitLine: {
-          show: true
-        }
+          show: true,
+          lineStyle: { color: 'rgba(148, 163, 184, 0.1)' }
+        },
+        axisLabel: { color: '#94a3b8', fontSize: 11 },
+        axisLine: { lineStyle: { color: 'rgba(148, 163, 184, 0.1)' } }
       },
       yAxis: {
         type: 'value',
         min: 0, // Start value of the Y-axis
         max: this.maxIncome, // End value of the Y-axis
-        interval: 1000, // Interval between values
+        interval: this.maxIncome > 5000 ? Math.ceil(this.maxIncome / 5) : 1000,
         splitLine: {
-          show: true
+          show: true,
+          lineStyle: { color: 'rgba(148, 163, 184, 0.1)' }
         },
         axisLabel: {
+          color: '#94a3b8',
+          fontSize: 11,
           formatter: '{value}' // Format for Y-axis labels
         }
       },
@@ -135,25 +154,37 @@ export class DashboardComponent implements OnInit{
         {
           data: yAxisValues, // Y-axis data points
           type: 'line',
+          smooth: true,
+          symbolSize: 6,
           lineStyle: {
-            color: '#4fa56f'
+            color: '#10B981',
+            width: 3
           },
           itemStyle: {
-            color: '#4fa56f'
+            color: '#10B981'
           },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(16, 185, 129, 0.25)' },
+              { offset: 1, color: 'rgba(16, 185, 129, 0.0)' }
+            ])
+          }
         }
       ],
       tooltip: {
         trigger: 'axis', // Show tooltip for both X and Y-axis values
+        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        textStyle: { color: '#FFFFFF', fontSize: 12 },
         formatter: (params: any) => {
           const point = params[0];
           return `
-            <div style="padding: 5px; font-family: Arial, sans-serif; line-height: 1.5;">
-              <div style="font-weight: bold; margin-bottom: 5px;">${point.axisValue}</div>
-              <div style="display: flex; align-items: center;">
-                <div style="width: 10px; height: 10px; background-color: #28a745; margin-right: 5px; margin-bottom:1px;"></div>
-                <span>Income:</span>
-                <span style="font-weight: bold; margin-left: 5px;">${point.data}</span>
+            <div style="padding: 4px; font-family: sans-serif; line-height: 1.4;">
+              <div style="font-weight: 600; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${point.axisValue}</div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 8px; height: 8px; background-color: #10B981; border-radius: 2px;"></div>
+                <span style="font-weight: 500;">Income:</span>
+                <span style="font-weight: 600; margin-left: 2px;">&#8377;${point.data}</span>
               </div>
             </div>
           `;
@@ -167,7 +198,11 @@ export class DashboardComponent implements OnInit{
 
   expenseChart(): void {
     const chartDom = document.getElementById('expense-chart')!;
+    if (this.expenseChartInstance) {
+      this.expenseChartInstance.dispose();
+    }
     const myChart = echarts.init(chartDom);
+    this.expenseChartInstance = myChart;
 
     // X-axis and Y-axis fixed values
     const xAxisLabels = this.expenseDateArray;
@@ -175,23 +210,35 @@ export class DashboardComponent implements OnInit{
     const yAxisValues = this.expenseAmountArray;
 
     const option = {
+      grid: {
+        top: 20,
+        bottom: 40,
+        left: 50,
+        right: 20
+      },
       xAxis: {
         type: 'category',
         data: xAxisLabels, // Fixed dates as X-axis labels
         boundaryGap: false, // Align labels directly on points
         splitLine: {
-          show: true
-        }
+          show: true,
+          lineStyle: { color: 'rgba(148, 163, 184, 0.1)' }
+        },
+        axisLabel: { color: '#94a3b8', fontSize: 11 },
+        axisLine: { lineStyle: { color: 'rgba(148, 163, 184, 0.1)' } }
       },
       yAxis: {
         type: 'value',
         min: 0, // Start value of the Y-axis
         max: this.maxExpense, // End value of the Y-axis
-        interval: 500, // Interval between values
+        interval: this.maxExpense > 2500 ? Math.ceil(this.maxExpense / 5) : 500,
         splitLine: {
-          show: true
+          show: true,
+          lineStyle: { color: 'rgba(148, 163, 184, 0.1)' }
         },
         axisLabel: {
+          color: '#94a3b8',
+          fontSize: 11,
           formatter: '{value}' // Format for Y-axis labels
         }
       },
@@ -199,25 +246,37 @@ export class DashboardComponent implements OnInit{
         {
           data: yAxisValues, // Y-axis data points
           type: 'line',
+          smooth: true,
+          symbolSize: 6,
           lineStyle: {
-            color: '#DC2627'
+            color: '#EF4444',
+            width: 3
           },
           itemStyle: {
-            color: '#DC2627'
+            color: '#EF4444'
           },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(239, 68, 68, 0.25)' },
+              { offset: 1, color: 'rgba(239, 68, 68, 0.0)' }
+            ])
+          }
         }
       ],
       tooltip: {
         trigger: 'axis', // Show tooltip for both X and Y-axis values
+        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        textStyle: { color: '#FFFFFF', fontSize: 12 },
         formatter: (params: any) => {
           const point = params[0];
           return `
-            <div style="padding: 5px; font-family: Arial, sans-serif; line-height: 1.5;">
-              <div style="font-weight: bold; margin-bottom: 5px;">${point.axisValue}</div>
-              <div style="display: flex; align-items: center;">
-                <div style="width: 10px; height: 10px; background-color: #DC2627; margin-right: 5px; margin-bottom:1px;"></div>
-                <span>Expense:</span>
-                <span style="font-weight: bold; margin-left: 5px;">${point.data}</span>
+            <div style="padding: 4px; font-family: sans-serif; line-height: 1.4;">
+              <div style="font-weight: 600; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${point.axisValue}</div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 8px; height: 8px; background-color: #EF4444; border-radius: 2px;"></div>
+                <span style="font-weight: 500;">Expense:</span>
+                <span style="font-weight: 600; margin-left: 2px;">&#8377;${point.data}</span>
               </div>
             </div>
           `;
@@ -243,6 +302,21 @@ export class DashboardComponent implements OnInit{
        this.isResponseLoading = false;
       }
     })
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.incomeChartInstance?.resize();
+    this.expenseChartInstance?.resize();
+  }
+
+  ngOnDestroy(): void {
+    if (this.incomeChartInstance) {
+      this.incomeChartInstance.dispose();
+    }
+    if (this.expenseChartInstance) {
+      this.expenseChartInstance.dispose();
+    }
   }
 
 }
