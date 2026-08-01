@@ -1,5 +1,5 @@
 export const environment = {
     production : false,
-    apiURL : 'https://income-expense-tracker-api-kui4.onrender.com',
+    apiURL : 'https://a5v77g9a2a.execute-api.ap-south-1.amazonaws.com',
     serverURL : 'http://localhost:4200'
 }
