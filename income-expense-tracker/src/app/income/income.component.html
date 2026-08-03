@@ -7,7 +7,7 @@
   }
   @else {
     <!-- Total Income Summary -->
-    <div class="glass-card p-6 flex items-center justify-between mb-6">
+    <div class="glass-card hover-card p-6 flex items-center justify-between mb-6">
       <div>
         <p class="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Income</p>
         <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-450 mt-1">&#8377;{{ totalIncome }}</h3>
@@ -148,7 +148,7 @@
             }
             @else {
               @for (pastIncome of pastIncomes; track $index) {
-                <div class="p-4 rounded-xl border border-slate-200/40 dark:border-slate-800/40 bg-white/20 dark:bg-white/5 flex items-center justify-between hover:bg-slate-200/30 dark:hover:bg-slate-800/20 transition-all duration-200">
+                <div class="hover-card p-4 rounded-xl border border-slate-200/40 dark:border-slate-800/40 flex items-center justify-between">
                   <div class="flex items-center gap-4">
                     <span class="p-3 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-450 rounded-xl">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

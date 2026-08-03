@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.expenseChart();
         }
 
-    },2000)
+    },1000)
       window.dispatchEvent(new Event('resize'));
    
   }

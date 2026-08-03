@@ -1,9 +1,24 @@
-.hover\:shadow-custom:hover {
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2), 0 -12px 20px rgba(0, 0, 0, 0); /* Increased shadow size */
-  }
+.hover-card{
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.3s ease;
+}
 
-  .hover\:shadow-new:hover {
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Uniform shadow */ 
-  }
+.hover-card:hover {
+  transform: translateY(-4px) scale(1.015);
 
-  
+  background: var(--glass-hover-bg);
+
+  box-shadow:
+      0 16px 40px rgba(0,0,0,.08);
+
+  border-color: rgba(255,255,255,.6);
+}
+
+.dark .hover-card:hover {
+    border-color: rgba(255,255,255,.12);
+
+    box-shadow:
+        0 16px 40px rgba(0,0,0,.35);
+}

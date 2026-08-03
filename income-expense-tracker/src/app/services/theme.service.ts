@@ -15,7 +15,7 @@ export class ThemeService {
   }
 
   private initializeTheme() {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const savedTheme = sessionStorage.getItem('theme') as 'light' | 'dark' | null;
     if (savedTheme) {
       this.setTheme(savedTheme);
     } else {
@@ -26,7 +26,7 @@ export class ThemeService {
 
   setTheme(theme: 'light' | 'dark') {
     this.themeSignal.set(theme);
-    localStorage.setItem('theme', theme);
+    sessionStorage.setItem('theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {

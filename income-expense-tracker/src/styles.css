@@ -20,6 +20,7 @@
   --input-bg: rgba(255, 255, 255, 0.5);
   --input-border: rgba(226, 232, 240, 0.8);
   --input-text: #0F172A;
+  --glass-hover-bg: rgba(255, 255, 255, 0.55);
   --card-bg: rgba(255, 255, 255, 0.45);
   --card-border: rgba(255, 255, 255, 0.6);
 
@@ -51,7 +52,7 @@
   --input-text: #F8FAFC;
   --card-bg: rgba(30, 41, 59, 0.4);
   --card-border: rgba(255, 255, 255, 0.05);
-
+--glass-hover-bg: rgba(30, 41, 59, 0.55);
   --sidebar-bg: rgba(15, 23, 42, 0.35);
   --sidebar-text: #94A3B8;
   --sidebar-active-bg: rgba(59, 130, 246, 0.12);
