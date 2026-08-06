@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SidebarService } from './sidebar.service';
 import { RouterModule } from '@angular/router';
@@ -15,13 +15,32 @@ export class SidebarComponent implements OnInit, OnDestroy{
   isSidebarOpen: boolean = false;
   private sidebarSubscription!: Subscription;
 
-  constructor(private sidebarService: SidebarService) {}
+  constructor(
+    private sidebarService: SidebarService,
+    private elementRef: ElementRef
+  ) {}
 
   ngOnInit() {
     // Subscribe to the sidebar open state
     this.sidebarSubscription = this.sidebarService.isSidebarOpen$.subscribe(isOpen => {
       this.isSidebarOpen = isOpen;
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Only close if sidebar is open, and we are on mobile/tablet (less than md size)
+    if (this.isSidebarOpen && window.innerWidth < 768) {
+      const clickedInside = this.elementRef.nativeElement.contains(event.target);
+      
+      // Check if the hamburger button (or the svg/path inside it) was clicked
+      const hamburgerButton = document.querySelector('[aria-label="Toggle Sidebar"]');
+      const clickedHamburger = hamburgerButton && hamburgerButton.contains(event.target as Node);
+
+      if (!clickedInside && !clickedHamburger) {
+        this.sidebarService.setSidebarState(false);
+      }
+    }
   }
 
   ngOnDestroy() {
