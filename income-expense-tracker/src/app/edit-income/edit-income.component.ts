@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category, CategoryList } from '../models/category';
+import { CategoryList } from '../models/category';
 import { IncomeService } from '../services/income.service';
 import { first } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { SignInResponse } from '../models/sign-in-response';
-import { Income } from '../models/income';
 import { IncomePayload } from '../models/income-payload';
 
 @Component({
@@ -20,100 +18,128 @@ import { IncomePayload } from '../models/income-payload';
 })
 export class EditIncomeComponent implements OnInit {
 
-  incomeId : string = "";
-  myForm!:FormGroup;
-  isLoading : boolean = false;
-  incomeCategories!: CategoryList
-  isResponseLoading : boolean = false;
-  payload : IncomePayload = {};
-  userId : string = "";
-  constructor(private activatedRoute : ActivatedRoute, private fb : FormBuilder, private incomeService : IncomeService, private toastrService : ToastrService, private router : Router){}
-  
+  incomeId: string = "";
+  myForm!: FormGroup;
+  isLoading: boolean = false;
+  incomeCategories!: CategoryList;
+  isResponseLoading: boolean = false;
+  payload: IncomePayload = {};
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder,
+    private incomeService: IncomeService,
+    private toastrService: ToastrService,
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.incomeId = params['id'];
-    })
-    const encryptedUserResponse = sessionStorage.getItem('userResponse');
-    let userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
-    this.userId = userDetails.data.userId;
+    });
+
     this.buildForm();
     this.getAllIncomeCategories();
-      console.log(this.incomeId)
-    if(this.incomeId !== ""){
-       this.getIncomeByIncomeId();
+
+    if (this.incomeId !== "") {
+      this.getIncomeByIncomeId();
     }
   }
 
-  buildForm(){
+  buildForm() {
     this.myForm = this.fb.group({
-      title : ['', [Validators.required, Validators.maxLength(20)]],
-      amount : ['', [Validators.required, Validators.minLength(4),
-       Validators.pattern(/^\d+$/)]],
-      date : ['', Validators.required],
-      description : ['', Validators.required],
-      category : ['', Validators.required],
-     })
+      title: ['', [Validators.required, Validators.maxLength(20)]],
+      amount: ['', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.pattern(/^\d+$/)
+      ]],
+      date: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+    });
   }
+
   allowNumbersOnly(event: KeyboardEvent) {
     const key = event.key;
+
     if (!/^\d$/.test(key)) {
       event.preventDefault();
     }
   }
-  getAllIncomeCategories(){
+
+  getAllIncomeCategories() {
     this.incomeService.getAllIncomeCategories().pipe(first()).subscribe({
-      next : (response : CategoryList)=>{
-        this.incomeCategories =response;
+      next: (response: CategoryList) => {
+        this.incomeCategories = response;
       },
-      error : (error : HttpErrorResponse)=>{
-         this.toastrService.error(error.error.error, "Error while loading Income Categories");
+      error: (error: HttpErrorResponse) => {
+        this.toastrService.error(
+          error.error.error,
+          "Error while loading Income Categories"
+        );
       }
-    })
+    });
   }
 
-  getIncomeByIncomeId(){
+  getIncomeByIncomeId() {
     this.isResponseLoading = true;
+
     this.incomeService.getIncomeByIncomeId(this.incomeId).pipe(first()).subscribe({
-      next : (response : any)=>{
-       this.myForm.get('title')?.setValue(response.data.title);
-       this.myForm.get('amount')?.setValue((response.data.amount).toString());
-       this.myForm.get('date')?.setValue(new Date(response.data.date).toISOString().split('T')[0]);
-       this.myForm.get('description')?.setValue(response.data.description);
-       this.myForm.get('category')?.setValue((response.data.category).toString());
-       this.isResponseLoading = false;
-      },
-      error : (error :HttpErrorResponse)=>{
+      next: (response: any) => {
+        this.myForm.get('title')?.setValue(response.data.title);
+        this.myForm.get('amount')?.setValue(response.data.amount.toString());
+        this.myForm.get('date')?.setValue(
+          new Date(response.data.date).toISOString().split('T')[0]
+        );
+        this.myForm.get('description')?.setValue(response.data.description);
+        this.myForm.get('category')?.setValue(
+          response.data.category.toString()
+        );
+
         this.isResponseLoading = false;
-        this.toastrService.error(error.error.error, "Error while loading Income Details");
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isResponseLoading = false;
+        this.toastrService.error(
+          error.error.error,
+          "Error while loading Income Details"
+        );
       }
-    })
+    });
   }
+
   onSave(): void {
     if (this.myForm.valid) {
-    this.isLoading = true;
+      this.isLoading = true;
 
-    this.payload = new IncomePayload();
-    this.payload.id = this.incomeId;
-    this.payload.title = this.myForm.get('title')?.value;
-    this.payload.amount = parseInt(this.myForm.get('amount')?.value);
-    this.payload.date = new Date(this.myForm.get('date')?.value).toISOString();
-    this.payload.description = this.myForm.get('description')?.value;
-    this.payload.category = parseInt(this.myForm.get('category')?.value);
-    this.payload.userId = this.userId;
+      this.payload = new IncomePayload();
+
+      this.payload.id = this.incomeId;
+      this.payload.title = this.myForm.get('title')?.value;
+      this.payload.amount = parseInt(this.myForm.get('amount')?.value);
+      this.payload.date = new Date(
+        this.myForm.get('date')?.value
+      ).toISOString();
+      this.payload.description = this.myForm.get('description')?.value;
+      this.payload.category = parseInt(
+        this.myForm.get('category')?.value
+      );
 
       this.incomeService.updateIncome(this.payload).pipe(first()).subscribe({
-        next : (response)=>{
+        next: (response) => {
           this.isLoading = false;
-          this.toastrService.success('Selected Income updated', 'Success');
+          this.toastrService.success(
+            'Selected Income updated',
+            'Success'
+          );
           this.router.navigate(['income']);
         },
-        error : (error : HttpErrorResponse)=>{
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
           this.toastrService.error(error.error.error, "Error");
         }
-      })
-  }
-
-
+      });
+    }
   }
 }

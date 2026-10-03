@@ -9,9 +9,11 @@ import { DashboardStats } from '../models/dashboard-stats';
 })
 export class DashboardService {
 
-  constructor(private commonService : CommonService) { }
+  constructor(private commonService: CommonService) {}
 
-  getDashboardStats(userId : string):Observable<DashboardStats>{
-    return this.commonService.httpGet(`${environment.apiURL}/dashboard/getDashboardStats?userId=${userId}`);
+  getDashboardStats(): Observable<DashboardStats> {
+    return this.commonService.httpGet(
+      `${environment.apiURL}/dashboard/getDashboardStats`
+    );
   }
 }

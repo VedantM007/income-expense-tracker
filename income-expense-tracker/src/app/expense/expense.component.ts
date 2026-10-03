@@ -4,11 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { ExpenseService } from '../services/expense.service';
 import { first } from 'rxjs';
-import { Category, CategoryList } from '../models/category';
+import { CategoryList } from '../models/category';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { IncomePayload } from '../models/income-payload';
-import { SignInResponse } from '../models/sign-in-response';
 import { Expense, ExpenseList } from '../models/expense';
 
 @Component({
@@ -19,71 +18,93 @@ import { Expense, ExpenseList } from '../models/expense';
   styleUrl: './expense.component.css'
 })
 export class ExpenseComponent implements OnInit {
-  totalExpense : number = 0;
+  totalExpense: number = 0;
   myForm!: FormGroup;
-  isLoading : boolean = false;
-  pastExpenses : Expense[] = [];
-  expenseCategories!: CategoryList
-  payload : IncomePayload = {};
-  userId : string = '';
-  isResponseLoading : boolean = false;
-  isOpen : boolean = false;
-  showModal : boolean = false;
-  expenseId : string = '';
-  constructor(private fb : FormBuilder, private router : Router, private expenseService : ExpenseService, private toastrService : ToastrService){}
+  isLoading: boolean = false;
+  pastExpenses: Expense[] = [];
+  expenseCategories!: CategoryList;
+  payload: IncomePayload = {};
+  isResponseLoading: boolean = false;
+  isOpen: boolean = false;
+  showModal: boolean = false;
+  expenseId: string = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private expenseService: ExpenseService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit(): void {
     const encryptedUserResponse = sessionStorage.getItem('userResponse');
-    const userDetails : SignInResponse = JSON.parse(atob(encryptedUserResponse as string));
-     this.userId = userDetails.data.userId;
+
     this.buildForm();
-    this.pastExpenses = []
+    this.pastExpenses = [];
     this.getAllExpenseCategories();
-    if(encryptedUserResponse){
+
+    if (encryptedUserResponse) {
       this.getAllExpensesByUserId();
-     }
+    }
   }
-  
-  buildForm(){
+
+  buildForm() {
     this.myForm = this.fb.group({
-     title : ['', [Validators.required, Validators.maxLength(20)]],
-     amount : ['', [Validators.required,Validators.pattern(/^\d+$/)]],
-     date : ['', Validators.required],
-     description : ['', Validators.required],
-     category : ['', Validators.required],
-    })
+      title: ['', [Validators.required, Validators.maxLength(20)]],
+      amount: ['', [
+        Validators.required,
+        Validators.pattern(/^\d+$/)
+      ]],
+      date: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+    });
   }
-  getAllExpenseCategories(){
+
+  getAllExpenseCategories() {
     this.expenseService.getAllExpenseCategories().pipe(first()).subscribe({
-      next : (response : CategoryList)=>{
-        this.expenseCategories =response;
+      next: (response: CategoryList) => {
+        this.expenseCategories = response;
       },
-      error : (error : HttpErrorResponse)=>{
-         this.toastrService.error(error.error.error, "Error while loading Expense Categories");
+      error: (error: HttpErrorResponse) => {
+        this.toastrService.error(
+          error.error.error,
+          "Error while loading Expense Categories"
+        );
       }
-    })
+    });
   }
-  getAllExpensesByUserId(){
+
+  getAllExpensesByUserId() {
     this.isResponseLoading = true;
-    this.expenseService.getAllExpensesByUserId(this.userId).pipe(first()).subscribe({
-      next : (response:ExpenseList)=>{
-        this.pastExpenses = response.data
-        this.totalExpense = this.pastExpenses.reduce((sum, income) => sum + income.amount, 0);
+
+    this.expenseService.getAllExpensesByUserId().pipe(first()).subscribe({
+      next: (response: ExpenseList) => {
+        this.pastExpenses = response.data;
+        this.totalExpense = this.pastExpenses.reduce(
+          (sum, expense) => sum + expense.amount,
+          0
+        );
         this.isResponseLoading = false;
       },
-      error : (error : HttpErrorResponse)=>{
+      error: (error: HttpErrorResponse) => {
         this.isResponseLoading = false;
-        this.toastrService.error(error.error.error, "Error while fetching Past Expenses");
+        this.toastrService.error(
+          error.error.error,
+          "Error while fetching Past Expenses"
+        );
       }
-    })
+    });
   }
+
   allowNumbersOnly(event: KeyboardEvent) {
     const key = event.key;
+
     if (!/^\d$/.test(key)) {
       event.preventDefault();
     }
   }
-  
+
   onSave(): void {
     if (this.myForm.valid) {
       this.isLoading = true;
@@ -92,55 +113,61 @@ export class ExpenseComponent implements OnInit {
 
       this.payload.title = this.myForm.get('title')?.value;
       this.payload.amount = parseInt(this.myForm.get('amount')?.value);
-      this.payload.date = new Date(this.myForm.get('date')?.value).toISOString();
+      this.payload.date = new Date(
+        this.myForm.get('date')?.value
+      ).toISOString();
       this.payload.description = this.myForm.get('description')?.value;
-      this.payload.category = parseInt(this.myForm.get('category')?.value);
-      this.payload.userId = this.userId;
-    
+      this.payload.category = parseInt(
+        this.myForm.get('category')?.value
+      );
+
       this.expenseService.addNewExpense(this.payload).pipe(first()).subscribe({
-        next: (response)=>{
-        this.isLoading = false;
-        this.getAllExpensesByUserId();
-        this.myForm.reset();
-        this.myForm.get('category')?.setValue("")
-        this.toastrService.success('New Expense added', 'Success');
-        },
-        error : (error:HttpErrorResponse)=>{
+        next: (response) => {
           this.isLoading = false;
-          this.toastrService.error(error.error.error, "Error")
+          this.getAllExpensesByUserId();
           this.myForm.reset();
-          this.myForm.get('category')?.setValue("")
+          this.myForm.get('category')?.setValue('');
+          this.toastrService.success('New Expense added', 'Success');
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoading = false;
+          this.toastrService.error(error.error.error, "Error");
+          this.myForm.reset();
+          this.myForm.get('category')?.setValue('');
         }
-      })
-      
+      });
     }
   }
 
-  openModal(id:string){
-    this.showModal = true; 
-      setTimeout(() => this.isOpen = true, 10);
-      this.expenseId = id;
+  openModal(id: string) {
+    this.showModal = true;
+
+    setTimeout(() => this.isOpen = true, 10);
+
+    this.expenseId = id;
   }
-  
+
   closeModal() {
     this.isOpen = false;
-    setTimeout(() => this.showModal = false, 300); // Remove from DOM after animation
+
+    setTimeout(() => this.showModal = false, 300);
   }
-  
-  deleteExpenseById(){
+
+  deleteExpenseById() {
     this.expenseService.deleteExpenseById(this.expenseId).pipe(first()).subscribe({
-      next : (response)=>{
+      next: (response) => {
         this.toastrService.info('Selected Expense deleted', 'Deleted');
-       this.getAllExpensesByUserId();
-       this.closeModal();
+        this.getAllExpensesByUserId();
+        this.closeModal();
       },
-      error : (error : HttpErrorResponse)=>{
-        this.toastrService.error(error.message, 'Error')
+      error: (error: HttpErrorResponse) => {
+        this.toastrService.error(error.message, 'Error');
         this.closeModal();
       }
-    })
+    });
   }
-  navigateToEditExpense(id:string){
-    this.router.navigate(['edit-expense/' + id])
-   }
+
+  navigateToEditExpense(id: string) {
+    this.router.navigate(['edit-expense/' + id]);
+  }
 }
