@@ -47,17 +47,31 @@ export class ChangePasswordComponent implements OnInit {
       {
         oldPassword: [
           '',
-          [Validators.required, Validators.minLength(6)]
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(128)
+          ]
         ],
+
         newPassword: [
           '',
           [
             Validators.required,
-            Validators.minLength(6),
+            Validators.minLength(8),
+            Validators.maxLength(128),
             this.passwordStrengthValidator
           ]
         ],
-        confirmPassword: ['', Validators.required]
+
+        confirmPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(128)
+          ]
+        ]
       },
       {
         validators: this.passwordMatchValidator as ValidatorFn
@@ -83,6 +97,10 @@ export class ChangePasswordComponent implements OnInit {
     const newPassword = group.get('newPassword')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
 
+    if (!newPassword || !confirmPassword) {
+      return null;
+    }
+
     return newPassword === confirmPassword
       ? null
       : { passwordMismatch: true };
@@ -92,6 +110,10 @@ export class ChangePasswordComponent implements OnInit {
     control: any
   ): { [key: string]: boolean } | null {
     const password = control.value;
+
+    if (!password) {
+      return null;
+    }
 
     const hasUpperCase = /[A-Z]/.test(password);
     const hasSpecialCharacter =

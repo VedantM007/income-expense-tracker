@@ -88,9 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.incomeAmountArray = response.data.map((item) => item.amount);
         this.incomeDateArray = formattedDates;
-
-        console.log(formattedDates);
-        console.log(this.incomeAmountArray);
       },
       error: (error: HttpErrorResponse) => {
         this.toastrService.error(

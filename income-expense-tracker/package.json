@@ -8,7 +8,6 @@
   "start:aws": "ng serve --configuration aws-dev -o",
   "build": "ng build",
   "build:dev": "ng build --configuration aws-dev",
-  "build:prod": "ng build --configuration production",
   "watch": "ng build --watch --configuration development",
   "test": "ng test"
 },

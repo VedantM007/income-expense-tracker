@@ -29,15 +29,6 @@ export class SignInComponent {
   ngOnInit() {
     this.buildForm();
     this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`
-
-    // const data = {
-    //   firstName : 'Vedant',
-    //   lastName : 'Mandwe',
-    //   email : 'vedantmandwe5@gmail.com'
-    // }
-    // console.log("Encrypted Value ::::",);
-    
-    //  console.log("Decrypted Value:::", JSON.parse(atob('eyJmaXJzdE5hbWUiOiJWZWRhbnQiLCJsYXN0TmFtZSI6Ik1hbmR3ZSIsImVtYWlsIjoidmVkYW50bWFuZHdlNUBnbWFpbC5jb20ifQ==')))
   }
 
   buildForm(){

@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ExpenseService } from '../services/expense.service';
 import { first } from 'rxjs';
@@ -50,15 +55,47 @@ export class ExpenseComponent implements OnInit {
 
   buildForm() {
     this.myForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(20)]],
-      amount: ['', [
-        Validators.required,
-        Validators.pattern(/^\d+$/)
-      ]],
+      title: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(100)
+        ]
+      ],
+      amount: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d+(\.\d+)?$/),
+          this.positiveAmountValidator
+        ]
+      ],
       date: ['', Validators.required],
-      description: ['', Validators.required],
-      category: ['', Validators.required],
+      description: [
+        '',
+        [
+          Validators.maxLength(500)
+        ]
+      ],
+      category: ['', Validators.required]
     });
+  }
+
+  positiveAmountValidator(control: any): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+
+    const amount = Number(value);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { positiveAmount: true };
+    }
+
+    return null;
   }
 
   getAllExpenseCategories() {
@@ -97,14 +134,6 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
-  allowNumbersOnly(event: KeyboardEvent) {
-    const key = event.key;
-
-    if (!/^\d$/.test(key)) {
-      event.preventDefault();
-    }
-  }
-
   onSave(): void {
     if (this.myForm.valid) {
       this.isLoading = true;
@@ -112,7 +141,7 @@ export class ExpenseComponent implements OnInit {
       this.payload = new IncomePayload();
 
       this.payload.title = this.myForm.get('title')?.value;
-      this.payload.amount = parseInt(this.myForm.get('amount')?.value);
+      this.payload.amount = parseFloat(this.myForm.get('amount')?.value);
       this.payload.date = new Date(
         this.myForm.get('date')?.value
       ).toISOString();

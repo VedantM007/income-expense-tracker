@@ -46,7 +46,6 @@ export class VerifyOtpComponent implements OnInit, OnDestroy{
       clearInterval(this.timerInterval);
       this.timerService.clearTimer(); // Remove timer from localStorage
     }
-    console.log('Component destroyed, timer cleared');
   } 
   startTimer() {
     this.timerInterval = setInterval(() => {

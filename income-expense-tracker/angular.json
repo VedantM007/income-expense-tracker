@@ -30,28 +30,7 @@
             "scripts": []
           },
           "configurations": {
-          "production": {
-    "budgets": [
-      {
-        "type": "initial",
-        "maximumWarning": "1.5MB",
-        "maximumError": "2MB"
-      },
-      {
-        "type": "anyComponentStyle",
-        "maximumWarning": "5kB",
-        "maximumError": "10kB"
-      }
-    ],
-    "outputHashing": "all",
-    "fileReplacements": [
-      {
-        "replace": "src/environments/environment.ts",
-        "with": "src/environments/environment.prod.ts"
-      }
-    ]
-  },
-             "development": {
+   "development": {
     "optimization": false,
     "extractLicenses": false,
     "sourceMap": true
@@ -70,7 +49,7 @@
     ]
   }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "aws-dev"
         },
      "serve": {
   "builder": "@angular-devkit/build-angular:dev-server",
