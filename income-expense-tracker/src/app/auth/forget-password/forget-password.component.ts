@@ -22,7 +22,7 @@ export class ForgetPasswordComponent implements OnInit {
   constructor(private fb : FormBuilder,private router : Router, private authService : AuthService, private toastrService : ToastrService){}
 
   ngOnInit() {
-     this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved`
+     this.footerText = `@Copyright ${new Date().getFullYear()}, Vedant labs. All Rights Reserved`
      this.buildForm();
   }
   buildForm(){

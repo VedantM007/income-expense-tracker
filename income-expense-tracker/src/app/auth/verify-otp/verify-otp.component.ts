@@ -35,7 +35,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy{
     const encryptedEmail = sessionStorage.getItem('email');
     this.email = atob(encryptedEmail as string);
     this.isDisabled = true;
-    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`;
+    this.footerText = `@Copyright ${new Date().getFullYear()}, Vedant labs. All Rights Reserved.`;
     this.buildForm();
     this.remainingTime = this.timerService.initializeTimer();
     this.startTimer();

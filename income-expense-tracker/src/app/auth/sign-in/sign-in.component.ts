@@ -28,7 +28,7 @@ export class SignInComponent {
 
   ngOnInit() {
     this.buildForm();
-    this.footerText = `@Copyright ${new Date().getFullYear()}, Wayne Industries. All Rights Reserved.`
+    this.footerText = `@Copyright ${new Date().getFullYear()}, Vedant labs. All Rights Reserved.`
   }
 
   buildForm(){
